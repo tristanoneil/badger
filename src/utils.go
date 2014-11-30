@@ -9,7 +9,9 @@ import (
 	"github.com/justinas/nosurf"
 )
 
-func render(name string, w http.ResponseWriter, r *http.Request, data ...map[string]interface{}) {
+func render(name string, w http.ResponseWriter, r *http.Request,
+	data ...map[string]interface{}) {
+
 	tmpl := fmt.Sprintf("templates/%s", name)
 
 	if tmpl == "" {
@@ -45,11 +47,11 @@ func authorize(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func currentUserId(r *http.Request) int {
+func currentUserID(r *http.Request) int {
 	session, _ := store.Get(r, "auth")
 
-	var Id int
-	db.Get(&Id, "SELECT id FROM users WHERE email = $1", session.Values["Email"])
+	var ID int
+	db.Get(&ID, "SELECT id FROM users WHERE email = $1", session.Values["Email"])
 
-	return Id
+	return ID
 }

@@ -21,7 +21,8 @@ func signup(w http.ResponseWriter, r *http.Request) {
 
 		if data["Flash"] == "" {
 			db.MustExec(`
-				INSERT into users (email, password) VALUES ($1, crypt($2, gen_salt('bf')))
+				INSERT into users (email, password)
+					VALUES ($1, crypt($2, gen_salt('bf')))
 			`, r.FormValue("email"), r.FormValue("password"))
 		}
 	}
@@ -35,7 +36,8 @@ func login(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
 		var count int
 		db.Get(&count, `
-			SELECT COUNT(*) FROM users WHERE email = $1 AND password = crypt($2, password)
+			SELECT COUNT(*) FROM users WHERE email = $1
+				AND password = crypt($2, password)
 		`, r.FormValue("email"), r.FormValue("password"))
 
 		if count > 0 {
