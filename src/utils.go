@@ -7,12 +7,11 @@ import (
 	"text/template"
 )
 
-func render(tmpl string, w http.ResponseWriter, r *http.Request, data ...map[string]interface{}) {
-	tmpl = fmt.Sprintf("templates/%s", tmpl)
-	t, err := template.ParseFiles(tmpl)
+func render(name string, w http.ResponseWriter, r *http.Request, data ...map[string]interface{}) {
+	tmpl := fmt.Sprintf("templates/%s", name)
 
-	if err != nil {
-		log.Print("Template parsing error: ", err)
+	if tmpl == "" {
+		log.Print("Missing template:", name)
 	}
 
 	d := map[string]interface{}{}
@@ -27,7 +26,9 @@ func render(tmpl string, w http.ResponseWriter, r *http.Request, data ...map[str
 		d["Flash"] = str
 	}
 
-	err = t.Execute(w, d)
+	err := template.
+		Must(template.ParseFiles(tmpl, "templates/base.html")).
+		ExecuteTemplate(w, "base", d)
 
 	if err != nil {
 		log.Print("Template executing error: ", err)

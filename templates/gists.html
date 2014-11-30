@@ -1,7 +1,7 @@
-<h1>Gists</h1>
+{{define "content"}}
+  <h1>Gists</h1>
 
-{{.Flash}}
-
-{{range .Gists}}
-  <h2>{{.Title}}</h2>
+  {{range .Gists}}
+    <h2>{{.Title}}</h2>
+  {{end}}
 {{end}}
