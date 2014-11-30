@@ -7,6 +7,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
 	"github.com/jmoiron/sqlx"
+	"github.com/justinas/nosurf"
 	_ "github.com/lib/pq"
 )
 
@@ -27,7 +28,7 @@ func main() {
 	http.Handle("/", router)
 
 	log.Println("Listening on port 3000")
-	http.ListenAndServe(":3000", nil)
+	http.ListenAndServe(":3000", nosurf.New(router))
 }
 
 type Gist struct {

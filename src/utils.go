@@ -5,6 +5,8 @@ import (
 	"log"
 	"net/http"
 	"text/template"
+
+	"github.com/justinas/nosurf"
 )
 
 func render(name string, w http.ResponseWriter, r *http.Request, data ...map[string]interface{}) {
@@ -25,6 +27,8 @@ func render(name string, w http.ResponseWriter, r *http.Request, data ...map[str
 	if str, ok := session.Values["Flash"].(string); ok {
 		d["Flash"] = str
 	}
+
+	d["Token"] = nosurf.Token(r)
 
 	err := template.
 		Must(template.ParseFiles(tmpl, "templates/base.html")).

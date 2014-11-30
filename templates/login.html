@@ -4,6 +4,7 @@
   <form action="login" method="post">
     <input type="email" name="email" value="{{.Email}}">
     <input type="password" name="password">
+    <input type="hidden" name="csrf_token" value="{{.Token}}">
     <input type="submit" value="Login">
   </form>
 {{end}}
