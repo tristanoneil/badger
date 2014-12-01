@@ -26,7 +26,10 @@ func render(name string, w http.ResponseWriter, r *http.Request,
 
 	session, _ := store.Get(r, "auth")
 
-	d["Flash"] = session.Values["Flash"].(string)
+	if str, ok := session.Values["Flash"].(string); ok {
+		d["Flash"] = str
+	}
+
 	d["Token"] = nosurf.Token(r)
 
 	err := template.
