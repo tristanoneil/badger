@@ -42,7 +42,7 @@ func login(w http.ResponseWriter, r *http.Request) {
 			session.Values["Flash"] = "Successfully logged in."
 			session.Save(r, w)
 
-			http.Redirect(w, r, "/gists", http.StatusFound)
+			http.Redirect(w, r, "/", http.StatusFound)
 		} else {
 			data["Flash"] = "Invalid username or password."
 		}

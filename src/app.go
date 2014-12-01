@@ -28,9 +28,9 @@ func main() {
 	store = sessions.NewCookieStore([]byte(os.Getenv("SESSION_SECRET")))
 
 	router := mux.NewRouter()
+	router.HandleFunc("/", gists).Methods("GET", "POST")
 	router.HandleFunc("/signup", signup).Methods("GET", "POST")
 	router.HandleFunc("/login", login).Methods("GET", "POST")
-	router.HandleFunc("/gists", gists).Methods("GET", "POST")
 
 	http.Handle("/", router)
 
