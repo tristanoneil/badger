@@ -14,4 +14,4 @@ password
 ```
 
 You may retrieve Badger's dependencies using `go get ./...` then start the
-development server with `go run src/*.go`.
+development server with `go run *.go`.
