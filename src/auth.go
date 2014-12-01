@@ -6,20 +6,16 @@ func signup(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"Email": r.FormValue("email")}
 
 	if r.Method == "POST" {
-		if r.FormValue("password") != r.FormValue("password_confirmation") {
-			data["Flash"] = "Passwords don't match."
-		}
-
 		var count int
 		db.Get(&count, `
 			SELECT COUNT(*) FROM users WHERE email = $1
-		`, r.FormValue("email"))
+			`, r.FormValue("email"))
 
-		if count > 0 {
-			data["Flash"] = "Emails must be unique."
-		}
-
-		if data["Flash"] == "" {
+		if r.FormValue("password") != r.FormValue("password_confirmation") {
+			data["Flash"] = "Passwords don't match."
+		} else if count > 0 {
+			data["Flash"] = "Email must be unique."
+		} else {
 			db.MustExec(`
 				INSERT into users (email, password)
 					VALUES ($1, crypt($2, gen_salt('bf')))
