@@ -12,14 +12,18 @@ func signup(w http.ResponseWriter, r *http.Request) {
 			`, r.FormValue("email"))
 
 		if r.FormValue("password") != r.FormValue("password_confirmation") {
-			data["Flash"] = "Passwords don't match."
+			setSession("Passwords don't match.", w, r)
 		} else if count > 0 {
-			data["Flash"] = "Email must be unique."
+			setSession("Email must be unique.", w, r)
 		} else {
 			db.MustExec(`
 				INSERT into users (email, password)
 					VALUES ($1, crypt($2, gen_salt('bf')))
 			`, r.FormValue("email"), r.FormValue("password"))
+
+			setSession("Successfully signed up", w, r)
+			http.Redirect(w, r, "/", http.StatusFound)
+			return
 		}
 	}
 
@@ -37,14 +41,12 @@ func login(w http.ResponseWriter, r *http.Request) {
 		`, r.FormValue("email"), r.FormValue("password"))
 
 		if count > 0 {
-			session, _ := store.Get(r, "auth")
-			session.Values["Email"] = r.FormValue("email")
-			session.Values["Flash"] = "Successfully logged in."
-			session.Save(r, w)
+			setSession(r.FormValue("email"), w, r, "Email")
+			setSession("Successfully logged in.", w, r)
 
 			http.Redirect(w, r, "/", http.StatusFound)
 		} else {
-			data["Flash"] = "Invalid username or password."
+			setSession("Invalid username or password.", w, r)
 		}
 	}
 

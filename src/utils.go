@@ -28,6 +28,7 @@ func render(name string, w http.ResponseWriter, r *http.Request,
 
 	if str, ok := session.Values["Flash"].(string); ok {
 		d["Flash"] = str
+		setSession("", w, r)
 	}
 
 	d["Token"] = nosurf.Token(r)
@@ -57,4 +58,18 @@ func currentUserID(r *http.Request) int {
 	db.Get(&ID, "SELECT id FROM users WHERE email = $1", session.Values["Email"])
 
 	return ID
+}
+
+func setSession(message string, w http.ResponseWriter,
+	r *http.Request, key ...string) {
+
+	k := "Flash"
+
+	if len(key) > 0 {
+		k = key[0]
+	}
+
+	session, _ := store.Get(r, "auth")
+	session.Values[k] = message
+	session.Save(r, w)
 }
