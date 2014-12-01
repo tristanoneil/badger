@@ -23,7 +23,7 @@ func signup(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	render("signup.html", w, r, data)
+	render("signup", w, r, data)
 }
 
 func login(w http.ResponseWriter, r *http.Request) {
@@ -48,5 +48,5 @@ func login(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	render("login.html", w, r, data)
+	render("login", w, r, data)
 }

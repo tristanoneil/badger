@@ -12,7 +12,7 @@ import (
 func render(name string, w http.ResponseWriter, r *http.Request,
 	data ...map[string]interface{}) {
 
-	tmpl := fmt.Sprintf("templates/%s", name)
+	tmpl := fmt.Sprintf("templates/%s.html", name)
 
 	if tmpl == "" {
 		log.Print("Missing template:", name)
