@@ -2,8 +2,8 @@
   <h1>Login</h1>
 
   <form action="login" method="post">
-    <input type="email" name="email" value="{{.Email}}">
-    <input type="password" name="password">
+    <input type="email" name="email" value="{{.Email}}" placeholder="Email">
+    <input type="password" name="password" placeholder="Password">
     <input type="hidden" name="csrf_token" value="{{.Token}}">
     <input type="submit" value="Login">
   </form>
