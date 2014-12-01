@@ -2,32 +2,60 @@ package main
 
 import "net/http"
 
-func signup(w http.ResponseWriter, r *http.Request) {
-	data := map[string]interface{}{"Email": r.FormValue("email")}
+type User struct {
+	ID                   int    `db:"id"`
+	Email                string `db:"email"`
+	Password             string `db:"password"`
+	PasswordConfirmation string
+	Errors               map[string]string
+}
 
-	if r.Method == "POST" {
-		var count int
-		db.Get(&count, `
-			SELECT COUNT(*) FROM users WHERE email = $1
-			`, r.FormValue("email"))
+func (user *User) Validate() bool {
+	user.Errors = make(map[string]string)
 
-		if r.FormValue("password") != r.FormValue("password_confirmation") {
-			setSession("Passwords don't match.", w, r)
-		} else if count > 0 {
-			setSession("Email must be unique.", w, r)
-		} else {
-			db.MustExec(`
-				INSERT into users (email, password)
-					VALUES ($1, crypt($2, gen_salt('bf')))
-			`, r.FormValue("email"), r.FormValue("password"))
+	var count int
+	db.Get(&count, `
+		SELECT COUNT(*) FROM users WHERE email = $1
+		`, user.Email)
 
-			setSession("Successfully signed up", w, r)
-			http.Redirect(w, r, "/", http.StatusFound)
-			return
-		}
+	if count > 0 {
+		user.Errors["Email"] = "Email must be unique."
 	}
 
-	render("signup", w, r, data)
+	if user.Email == "" {
+		user.Errors["Email"] = "You must provide an email."
+	}
+
+	if user.Password == "" {
+		user.Errors["Password"] = "You must provide a password."
+	}
+
+	if user.Password != user.PasswordConfirmation {
+		user.Errors["Password"] = "Passwords must match."
+	}
+
+	return len(user.Errors) == 0
+}
+
+func signup(w http.ResponseWriter, r *http.Request) {
+	user := &User{
+		Email:                r.FormValue("email"),
+		Password:             r.FormValue("password"),
+		PasswordConfirmation: r.FormValue("password_confirmation"),
+	}
+
+	if r.Method == "POST" && user.Validate() {
+		db.NamedExec(`
+				INSERT into users (email, password)
+					VALUES (:email, crypt(:password, gen_salt('bf')))
+			`, user)
+
+		setSession("Successfully signed up.", w, r)
+		http.Redirect(w, r, "/", http.StatusFound)
+		return
+	}
+
+	render("signup", w, r, map[string]interface{}{"User": user})
 }
 
 func login(w http.ResponseWriter, r *http.Request) {
