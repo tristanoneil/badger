@@ -7,6 +7,7 @@ import (
 	"text/template"
 
 	"github.com/justinas/nosurf"
+	"github.com/tristanoneil/badger/models"
 )
 
 func render(name string, w http.ResponseWriter, r *http.Request,
@@ -53,11 +54,7 @@ func authorize(w http.ResponseWriter, r *http.Request) {
 
 func currentUserID(r *http.Request) int {
 	session, _ := store.Get(r, "auth")
-
-	var ID int
-	db.Get(&ID, "SELECT id FROM users WHERE email = $1", session.Values["Email"])
-
-	return ID
+	return models.GetUserIDForEmail(session.Values["Email"].(string))
 }
 
 func setSession(message string, w http.ResponseWriter,
