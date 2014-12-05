@@ -1,4 +1,4 @@
-package main
+package routes
 
 import (
 	"net/http"
@@ -16,6 +16,7 @@ func signup(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" && user.Validate() {
 		user.Create()
 		setSession("Successfully signed up.", w, r)
+		setSession(user.Email, w, r, "Email")
 		http.Redirect(w, r, "/", http.StatusFound)
 		return
 	}

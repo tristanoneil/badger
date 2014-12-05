@@ -1,14 +1,24 @@
-package main
+package routes
 
 import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"text/template"
 
+	"github.com/gorilla/sessions"
 	"github.com/justinas/nosurf"
 	"github.com/tristanoneil/badger/models"
 )
+
+var (
+	store *sessions.CookieStore
+)
+
+func init() {
+	store = sessions.NewCookieStore([]byte(os.Getenv("SESSION_SECRET")))
+}
 
 func render(name string, w http.ResponseWriter, r *http.Request,
 	data ...map[string]interface{}) {
@@ -54,7 +64,12 @@ func authorize(w http.ResponseWriter, r *http.Request) {
 
 func currentUserID(r *http.Request) int {
 	session, _ := store.Get(r, "auth")
-	return models.GetUserIDForEmail(session.Values["Email"].(string))
+
+	if str, ok := session.Values["Flash"].(string); ok {
+		return models.GetUserIDForEmail(str)
+	}
+
+	return 0
 }
 
 func setSession(message string, w http.ResponseWriter,
