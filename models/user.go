@@ -1,5 +1,7 @@
 package models
 
+import "log"
+
 //
 // User is used to map users in the database.
 //
@@ -40,7 +42,11 @@ func (user *User) Validate() bool {
 // Create creates a new user in the database.
 //
 func (user *User) Create() {
-	db.NamedExec(`INSERT into users (email, password) VALUES (:email, crypt(:password, gen_salt('bf')))`, user)
+	_, err := db.NamedExec(`INSERT into users (email, password) VALUES (:email, crypt(:password, gen_salt('bf')))`, user)
+
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 //
@@ -48,7 +54,12 @@ func (user *User) Create() {
 //
 func IsUniqueUser(email string) bool {
 	var count int
-	db.Get(&count, "SELECT COUNT(*) FROM users WHERE email = $1", email)
+	err := db.Get(&count, "SELECT COUNT(*) FROM users WHERE email = $1", email)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	return count == 0
 }
 
@@ -57,7 +68,12 @@ func IsUniqueUser(email string) bool {
 //
 func IsValidUser(email string, password string) bool {
 	var count int
-	db.Get(&count, `SELECT COUNT(*) FROM users WHERE email = $1 AND password = crypt($2, password)`, email, password)
+	err := db.Get(&count, `SELECT COUNT(*) FROM users WHERE email = $1 AND password = crypt($2, password)`, email, password)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	return count > 0
 }
 
@@ -66,6 +82,11 @@ func IsValidUser(email string, password string) bool {
 //
 func GetUserIDForEmail(email string) int {
 	var ID int
-	db.Get(&ID, "SELECT id FROM users WHERE email = $1", email)
+	err := db.Get(&ID, "SELECT id FROM users WHERE email = $1", email)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	return ID
 }

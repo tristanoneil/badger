@@ -1,5 +1,7 @@
 package models
 
+import "log"
+
 //
 // Gist is used to map gists in the database.
 //
@@ -32,7 +34,11 @@ func (gist *Gist) Validate() bool {
 // Create creates a new gist in the database.
 //
 func (gist *Gist) Create() {
-	db.NamedExec(`INSERT into gists (title, content, user_id) VALUES (:title, :content, :user_id)`, gist)
+	_, err := db.NamedExec(`INSERT into gists (title, content, user_id) VALUES (:title, :content, :user_id)`, gist)
+
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 //
@@ -40,6 +46,11 @@ func (gist *Gist) Create() {
 //
 func GetGistsForUserID(UserID int) []Gist {
 	gists := []Gist{}
-	db.Select(&gists, "SELECT * FROM gists WHERE user_id = $1", UserID)
+	err := db.Select(&gists, "SELECT * FROM gists WHERE user_id = $1", UserID)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	return gists
 }

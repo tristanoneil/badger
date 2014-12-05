@@ -2,6 +2,7 @@ package models
 
 import (
 	"fmt"
+	"log"
 	"os"
 
 	"github.com/jmoiron/sqlx"
@@ -14,8 +15,13 @@ var (
 )
 
 func init() {
-	db, _ = sqlx.Connect(
+	var err error
+	db, err = sqlx.Connect(
 		"postgres",
 		fmt.Sprintf("dbname=%s sslmode=disable", os.Getenv("DATABASE")),
 	)
+
+	if err != nil {
+		log.Fatal(err)
+	}
 }
