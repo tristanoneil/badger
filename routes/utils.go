@@ -1,56 +1,38 @@
 package routes
 
 import (
-	"fmt"
-	"log"
 	"net/http"
 	"os"
-	"text/template"
 
 	"github.com/gorilla/sessions"
 	"github.com/justinas/nosurf"
 	"github.com/tristanoneil/badger/models"
+	r "github.com/unrolled/render"
 )
 
 var (
-	store *sessions.CookieStore
+	store    *sessions.CookieStore
+	renderer *r.Render
 )
 
 func init() {
 	store = sessions.NewCookieStore([]byte(os.Getenv("SESSION_SECRET")))
+	renderer = r.New(r.Options{
+		Layout: "layout",
+	})
 }
 
-func render(name string, w http.ResponseWriter, r *http.Request,
-	data ...map[string]interface{}) {
-
-	tmpl := fmt.Sprintf("templates/%s.html", name)
-
-	if tmpl == "" {
-		log.Print("Missing template:", name)
-	}
-
-	d := map[string]interface{}{}
-
-	if len(data) > 0 {
-		d = data[0]
-	}
-
+func render(template string, w http.ResponseWriter, r *http.Request, binding map[string]interface{}) {
 	session, _ := store.Get(r, "auth")
 
-	if str, ok := session.Values["Flash"].(string); ok {
-		d["Flash"] = str
+	if flash, ok := session.Values["Flash"].(string); ok {
+		binding["Flash"] = flash
 		setSession("", w, r)
 	}
 
-	d["Token"] = nosurf.Token(r)
+	binding["Token"] = nosurf.Token(r)
 
-	err := template.
-		Must(template.ParseFiles(tmpl, "templates/base.html")).
-		ExecuteTemplate(w, "base", d)
-
-	if err != nil {
-		log.Print("Template executing error: ", err)
-	}
+	renderer.HTML(w, http.StatusOK, template, binding)
 }
 
 func authorize(w http.ResponseWriter, r *http.Request) {
@@ -65,8 +47,8 @@ func authorize(w http.ResponseWriter, r *http.Request) {
 func currentUserID(r *http.Request) int {
 	session, _ := store.Get(r, "auth")
 
-	if str, ok := session.Values["Flash"].(string); ok {
-		return models.GetUserIDForEmail(str)
+	if email, ok := session.Values["Email"].(string); ok {
+		return models.GetUserIDForEmail(email)
 	}
 
 	return 0
