@@ -34,7 +34,10 @@ func (gist *Gist) Validate() bool {
 // Create creates a new gist in the database.
 //
 func (gist *Gist) Create() {
-	_, err := db.NamedExec(`INSERT into gists (title, content, user_id) VALUES (:title, :content, :user_id)`, gist)
+	_, err := db.NamedExec(`
+		INSERT into gists (title, content, user_id)
+		VALUES (:title, :content, :user_id)`, gist,
+	)
 
 	if err != nil {
 		log.Fatal(err)

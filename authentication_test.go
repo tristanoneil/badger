@@ -48,4 +48,21 @@ var _ = Describe("UserSignup", func() {
 			Expect(page).To(HaveURL(fmt.Sprintf("%s/", server.URL)))
 		})
 	})
+
+	Scenario("logging in", func() {
+		Step("user visits login route", func() {
+			Expect(page.Navigate(fmt.Sprintf("%s/login", server.URL))).To(Succeed())
+			Expect(page).To(HaveURL(fmt.Sprintf("%s/login", server.URL)))
+		})
+
+		Step("user fills out login form", func() {
+			Fill(page.Find("input[name=email]"), "john@example.com")
+			Fill(page.Find("input[name=password]"), "password")
+			Submit(page.Find("input[type=submit]"))
+		})
+
+		Step("user is redirected to their gists", func() {
+			Expect(page).To(HaveURL(fmt.Sprintf("%s/", server.URL)))
+		})
+	})
 })

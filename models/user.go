@@ -42,7 +42,10 @@ func (user *User) Validate() bool {
 // Create creates a new user in the database.
 //
 func (user *User) Create() {
-	_, err := db.NamedExec(`INSERT into users (email, password) VALUES (:email, crypt(:password, gen_salt('bf')))`, user)
+	_, err := db.NamedExec(
+		`INSERT into users (email, password)
+		VALUES (:email, crypt(:password, gen_salt('bf')))`, user,
+	)
 
 	if err != nil {
 		log.Fatal(err)
@@ -64,11 +67,15 @@ func IsUniqueUser(email string) bool {
 }
 
 //
-// IsValidUser determines if a given email address and password are a valid user.
+// IsValidUser determines if a given email address and password
+// are a valid user.
 //
 func IsValidUser(email string, password string) bool {
 	var count int
-	err := db.Get(&count, `SELECT COUNT(*) FROM users WHERE email = $1 AND password = crypt($2, password)`, email, password)
+	err := db.Get(
+		&count, `SELECT COUNT(*) FROM users WHERE email = $1
+		AND password = crypt($2, password)`, email, password,
+	)
 
 	if err != nil {
 		log.Fatal(err)
