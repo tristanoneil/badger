@@ -32,6 +32,14 @@ var _ = Describe("UserSignup", func() {
 	})
 
 	Scenario("creating gists", func() {
+		Step("user signs up", func() {
+			Expect(page.Navigate(fmt.Sprintf("%s/signup", server.URL))).To(Succeed())
+			Fill(page.Find("input[name=email]"), "jack@example.com")
+			Fill(page.Find("input[name=password]"), "password")
+			Fill(page.Find("input[name=password_confirmation]"), "password")
+			Submit(page.Find("input[type=submit]"))
+		})
+
 		Step("user visits new gist page", func() {
 			Expect(page.Navigate(fmt.Sprintf("%s/gists/new", server.URL))).To(Succeed())
 			Expect(page).To(HaveURL(fmt.Sprintf("%s/gists/new", server.URL)))
