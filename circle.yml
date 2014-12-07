@@ -1,0 +1,6 @@
+machine:
+  environment:
+    DATABASE: badger_test
+database:
+  override:
+    - createdb badger_test

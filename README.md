@@ -1,5 +1,7 @@
 # Badger
 
+[![Circle CI](https://circleci.com/gh/tristanoneil/badger.svg?style=svg)](https://circleci.com/gh/tristanoneil/badger)
+
 Badger is a simplified self hosted Gist alternative built with Go.
 
 ## Setup
