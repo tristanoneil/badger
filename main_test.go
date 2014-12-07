@@ -4,6 +4,7 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	. "github.com/sclevine/agouti/core"
+	"github.com/tristanoneil/badger/models"
 
 	"testing"
 )
@@ -16,6 +17,9 @@ func TestBadger(t *testing.T) {
 var agoutiDriver WebDriver
 
 var _ = BeforeSuite(func() {
+	models.ResetDB()
+	models.MigrateDB()
+
 	var err error
 
 	agoutiDriver, err = PhantomJS()

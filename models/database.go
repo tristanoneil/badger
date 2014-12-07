@@ -2,6 +2,7 @@ package models
 
 import (
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 
@@ -24,4 +25,23 @@ func init() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	MigrateDB()
+}
+
+func MigrateDB() {
+	files, _ := ioutil.ReadDir("./migrations")
+
+	for _, f := range files {
+		_, err := sqlx.LoadFile(db, fmt.Sprintf("migrations/%s", f.Name()))
+
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+}
+
+func ResetDB() {
+	db.MustExec("drop schema public cascade")
+	db.MustExec("create schema public")
 }

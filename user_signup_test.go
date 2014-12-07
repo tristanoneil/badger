@@ -20,6 +20,7 @@ var _ = Describe("UserSignup", func() {
 
 	BeforeEach(func() {
 		server = httptest.NewServer(routes.Handlers())
+
 		var err error
 		page, err = agoutiDriver.Page()
 		Expect(err).NotTo(HaveOccurred())
@@ -37,7 +38,7 @@ var _ = Describe("UserSignup", func() {
 		})
 
 		Step("user fills out signout form", func() {
-			Fill(page.Find("input[name=email]"), "john1234567@example.com")
+			Fill(page.Find("input[name=email]"), "john@example.com")
 			Fill(page.Find("input[name=password]"), "password")
 			Fill(page.Find("input[name=password_confirmation]"), "password")
 			Submit(page.Find("input[type=submit]"))
