@@ -14,6 +14,7 @@ func Handlers() *mux.Router {
 	router.HandleFunc("/gists", newGist).Methods("POST")
 	router.HandleFunc("/signup", signup).Methods("GET", "POST")
 	router.HandleFunc("/login", login).Methods("GET", "POST")
+	router.HandleFunc("/logout", logout).Methods("GET")
 	router.PathPrefix("/").Handler(http.FileServer(rice.MustFindBox("../assets").HTTPBox()))
 	return router
 }

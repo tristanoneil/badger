@@ -40,3 +40,9 @@ func login(w http.ResponseWriter, r *http.Request) {
 
 	render("login", w, r, data)
 }
+
+func logout(w http.ResponseWriter, r *http.Request) {
+	setSession(nil, w, r, "Email")
+	setSession("Successfully logged out.", w, r)
+	http.Redirect(w, r, "/login", http.StatusFound)
+}

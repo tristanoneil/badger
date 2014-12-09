@@ -8,13 +8,18 @@ import (
 )
 
 func gists(w http.ResponseWriter, r *http.Request) {
-	authorize(w, r)
+	if !authorize(w, r) {
+		return
+	}
+
 	gists := models.GetGistsForUserID(currentUserID(r))
 	render("gists/index", w, r, map[string]interface{}{"Gists": gists})
 }
 
 func newGist(w http.ResponseWriter, r *http.Request) {
-	authorize(w, r)
+	if !authorize(w, r) {
+		return
+	}
 
 	gist := &models.Gist{
 		UserID:    currentUserID(r),

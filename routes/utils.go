@@ -33,6 +33,10 @@ func render(templateName string, w http.ResponseWriter,
 
 	binding["Token"] = nosurf.Token(r)
 
+	if loggedIn(r) {
+		binding["CurrentUserID"] = currentUserID(r)
+	}
+
 	templateBox, err := rice.FindBox("../templates")
 
 	if err != nil {
@@ -53,26 +57,28 @@ func render(templateName string, w http.ResponseWriter,
 	t.ExecuteTemplate(w, "base", binding)
 }
 
-func authorize(w http.ResponseWriter, r *http.Request) {
+func authorize(w http.ResponseWriter, r *http.Request) bool {
 	session, _ := store.Get(r, "auth")
 
 	if session.Values["Email"] == nil {
 		http.Redirect(w, r, "/login", http.StatusFound)
-		return
+		return false
 	}
+
+	return true
 }
 
 func currentUserID(r *http.Request) int {
 	session, _ := store.Get(r, "auth")
-
-	if email, ok := session.Values["Email"].(string); ok {
-		return models.GetUserIDForEmail(email)
-	}
-
-	return 0
+	return models.GetUserIDForEmail(session.Values["Email"].(string))
 }
 
-func setSession(message string, w http.ResponseWriter,
+func loggedIn(r *http.Request) bool {
+	session, _ := store.Get(r, "auth")
+	return session.Values["Email"] != nil
+}
+
+func setSession(message interface{}, w http.ResponseWriter,
 	r *http.Request, key ...string) {
 
 	k := "Flash"
