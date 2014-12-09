@@ -52,6 +52,9 @@ func (gist *Gist) Create() {
 	}
 }
 
+//
+// Markdown returns rendered markdown from the gists Content.
+//
 func (gist *Gist) Markdown() template.HTML {
 	return template.HTML(string(blackfriday.MarkdownCommon([]byte(gist.Content))))
 }

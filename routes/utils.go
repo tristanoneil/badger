@@ -1,28 +1,29 @@
 package routes
 
 import (
+	"fmt"
+	"html/template"
+	"log"
 	"net/http"
 	"os"
 
+	"github.com/GeertJohan/go.rice"
 	"github.com/gorilla/sessions"
 	"github.com/justinas/nosurf"
 	"github.com/tristanoneil/badger/models"
-	r "github.com/unrolled/render"
 )
 
 var (
-	store    *sessions.CookieStore
-	renderer *r.Render
+	store *sessions.CookieStore
 )
 
 func init() {
 	store = sessions.NewCookieStore([]byte(os.Getenv("SESSION_SECRET")))
-	renderer = r.New(r.Options{
-		Layout: "layout",
-	})
 }
 
-func render(template string, w http.ResponseWriter, r *http.Request, binding map[string]interface{}) {
+func render(templateName string, w http.ResponseWriter,
+	r *http.Request, binding map[string]interface{}) {
+
 	session, _ := store.Get(r, "auth")
 
 	if flash, ok := session.Values["Flash"].(string); ok {
@@ -32,7 +33,24 @@ func render(template string, w http.ResponseWriter, r *http.Request, binding map
 
 	binding["Token"] = nosurf.Token(r)
 
-	renderer.HTML(w, http.StatusOK, template, binding)
+	templateBox, err := rice.FindBox("../templates")
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	lstr, _ := templateBox.String("layout.tmpl")
+	tstr, _ := templateBox.String(fmt.Sprintf("%s.tmpl", templateName))
+	lstr += tstr
+
+	var t *template.Template
+	t, err = template.New("layout").Parse(lstr)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	t.ExecuteTemplate(w, "base", binding)
 }
 
 func authorize(w http.ResponseWriter, r *http.Request) {

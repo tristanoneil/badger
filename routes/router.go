@@ -3,6 +3,7 @@ package routes
 import (
 	"net/http"
 
+	"github.com/GeertJohan/go.rice"
 	"github.com/gorilla/mux"
 )
 
@@ -13,6 +14,6 @@ func Handlers() *mux.Router {
 	router.HandleFunc("/gists", newGist).Methods("POST")
 	router.HandleFunc("/signup", signup).Methods("GET", "POST")
 	router.HandleFunc("/login", login).Methods("GET", "POST")
-	router.PathPrefix("/").Handler(http.FileServer(http.Dir("./assets/")))
+	router.PathPrefix("/").Handler(http.FileServer(rice.MustFindBox("../assets").HTTPBox()))
 	return router
 }

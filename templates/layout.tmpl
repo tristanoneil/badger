@@ -1,19 +1,21 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8">
-    <title>Badger</title>
-    <link rel="stylesheet" href="/app.css" media="screen" charset="utf-8">
-  </head>
-  <body>
-    <div class="header">
-      <div class="inner">
-        <h1><a href="/">Badger</a></h1>
+{{define "base"}}
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <meta charset="UTF-8">
+      <title>Badger</title>
+      <link rel="stylesheet" href="/app.css" media="screen" charset="utf-8">
+    </head>
+    <body>
+      <div class="header">
+        <div class="inner">
+          <h1><a href="/">Badger</a></h1>
+        </div>
       </div>
-    </div>
 
-    {{.Flash}}
+      {{.Flash}}
 
-    {{ yield }}
-  </body>
-</html>
+      {{template "content" .}}
+    </body>
+  </html>
+{{end}}

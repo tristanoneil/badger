@@ -1,21 +1,23 @@
-<div class="sub-header">
-  <div class="inner">
-    <h2>Signup</h2>
+{{define "content"}}
+  <div class="sub-header">
+    <div class="inner">
+      <h2>Signup</h2>
+    </div>
   </div>
-</div>
 
-<div class="main">
-  <form action="signup" method="post">
-    <input type="email" name="email" value="{{.User.Email}}" placeholder="Email">
-    {{ with .User.Errors.Email }}
+  <div class="main">
+    <form action="signup" method="post">
+      <input type="email" name="email" value="{{.User.Email}}" placeholder="Email">
+      {{ with .User.Errors.Email }}
+        <p class="error">{{ . }}</p>
+      {{ end }}
+      <input type="password" name="password" placeholder="Password">
+      {{ with .User.Errors.Password }}
       <p class="error">{{ . }}</p>
-    {{ end }}
-    <input type="password" name="password" placeholder="Password">
-    {{ with .User.Errors.Password }}
-    <p class="error">{{ . }}</p>
-    {{ end }}
-    <input type="password" name="password_confirmation" placeholder="Password Confirmation">
-    <input type="hidden" name="csrf_token" value="{{.Token}}">
-    <input type="submit" value="Signup">
-  </form>
-</div>
+      {{ end }}
+      <input type="password" name="password_confirmation" placeholder="Password Confirmation">
+      <input type="hidden" name="csrf_token" value="{{.Token}}">
+      <input type="submit" value="Signup">
+    </form>
+  </div>
+{{end}}

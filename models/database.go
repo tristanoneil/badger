@@ -2,12 +2,11 @@ package models
 
 import (
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 
+	"github.com/GeertJohan/go.rice"
 	"github.com/jmoiron/sqlx"
-	_ "github.com/joho/godotenv/autoload"
 	_ "github.com/lib/pq"
 )
 
@@ -30,15 +29,17 @@ func init() {
 }
 
 func MigrateDB() {
-	files, _ := ioutil.ReadDir("./migrations")
+	migrationsBox, err := rice.FindBox("../migrations")
 
-	for _, f := range files {
-		_, err := sqlx.LoadFile(db, fmt.Sprintf("migrations/%s", f.Name()))
-
-		if err != nil {
-			log.Fatal(err)
-		}
+	if err != nil {
+		log.Fatal(err)
 	}
+
+	migrationsBox.Walk("", func(path string, info os.FileInfo, err error) error {
+		sql, _ := migrationsBox.String(path)
+		db.MustExec(sql)
+		return nil
+	})
 }
 
 func ResetDB() {
