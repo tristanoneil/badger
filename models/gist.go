@@ -3,6 +3,7 @@ package models
 import (
 	"html/template"
 	"log"
+	"time"
 
 	"github.com/russross/blackfriday"
 )
@@ -11,11 +12,13 @@ import (
 // Gist is used to map gists in the database.
 //
 type Gist struct {
-	ID      int    `db:"id"`
-	UserID  int    `db:"user_id"`
-	Title   string `db:"title"`
-	Content string `db:"content"`
-	Errors  map[string]string
+	ID        int       `db:"id"`
+	UserID    int       `db:"user_id"`
+	Title     string    `db:"title"`
+	Content   string    `db:"content"`
+	CreatedAt time.Time `db:"created_at"`
+	UpdatedAt time.Time `db:"updated_at"`
+	Errors    map[string]string
 }
 
 //
@@ -40,8 +43,8 @@ func (gist *Gist) Validate() bool {
 //
 func (gist *Gist) Create() {
 	_, err := db.NamedExec(`
-		INSERT into gists (title, content, user_id)
-		VALUES (:title, :content, :user_id)`, gist,
+		INSERT into gists (title, content, user_id, created_at, updated_at)
+		VALUES (:title, :content, :user_id, :created_at, :updated_at)`, gist,
 	)
 
 	if err != nil {
@@ -58,7 +61,11 @@ func (gist *Gist) Markdown() template.HTML {
 //
 func GetGistsForUserID(UserID int) []Gist {
 	gists := []Gist{}
-	err := db.Select(&gists, "SELECT * FROM gists WHERE user_id = $1", UserID)
+	err := db.Select(
+		&gists,
+		`SELECT * FROM gists WHERE user_id = $1 ORDER BY created_at DESC`,
+		UserID,
+	)
 
 	if err != nil {
 		log.Fatal(err)

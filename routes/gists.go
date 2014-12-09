@@ -2,6 +2,7 @@ package routes
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/tristanoneil/badger/models"
 )
@@ -16,9 +17,11 @@ func newGist(w http.ResponseWriter, r *http.Request) {
 	authorize(w, r)
 
 	gist := &models.Gist{
-		UserID:  currentUserID(r),
-		Title:   r.FormValue("title"),
-		Content: r.FormValue("content"),
+		UserID:    currentUserID(r),
+		Title:     r.FormValue("title"),
+		Content:   r.FormValue("content"),
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
 	}
 
 	if r.Method == "POST" && gist.Validate() {
