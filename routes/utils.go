@@ -54,7 +54,11 @@ func render(templateName string, w http.ResponseWriter,
 		log.Fatal(err)
 	}
 
-	t.ExecuteTemplate(w, "base", binding)
+	err = t.ExecuteTemplate(w, "base", binding)
+
+	if err != nil {
+		log.Print("Error executing template: ", err)
+	}
 }
 
 func authorize(w http.ResponseWriter, r *http.Request) bool {
