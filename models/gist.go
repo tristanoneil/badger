@@ -1,6 +1,11 @@
 package models
 
-import "log"
+import (
+	"html/template"
+	"log"
+
+	"github.com/russross/blackfriday"
+)
 
 //
 // Gist is used to map gists in the database.
@@ -42,6 +47,10 @@ func (gist *Gist) Create() {
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+func (gist *Gist) Markdown() template.HTML {
+	return template.HTML(string(blackfriday.MarkdownCommon([]byte(gist.Content))))
 }
 
 //
