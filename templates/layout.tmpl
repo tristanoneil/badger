@@ -10,9 +10,12 @@
       <div class="header">
         <div class="inner">
           <h1><a href="/">Badger</a></h1>
-          {{if .CurrentUserID}}
-            <a href="/logout">Logout</a>
-          {{end}}
+
+          <div class="nav">
+            {{if .CurrentUserID}}
+              <a href="/logout">Logout</a>
+            {{end}}
+          </div>
         </div>
       </div>
 
