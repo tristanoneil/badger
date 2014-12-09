@@ -7,6 +7,10 @@ import (
 
 	"github.com/GeertJohan/go.rice"
 	"github.com/jmoiron/sqlx"
+
+	//
+	// Allows sqlx to connect to Postgres.
+	//
 	_ "github.com/lib/pq"
 )
 
@@ -28,6 +32,9 @@ func init() {
 	MigrateDB()
 }
 
+//
+// MigrateDB loads all SQL files from migrations and executes them.
+//
 func MigrateDB() {
 	migrationsBox, err := rice.FindBox("../migrations")
 
@@ -42,6 +49,9 @@ func MigrateDB() {
 	})
 }
 
+//
+// ResetDB resets the database schema, useful for testing.
+//
 func ResetDB() {
 	db.MustExec("drop schema public cascade")
 	db.MustExec("create schema public")

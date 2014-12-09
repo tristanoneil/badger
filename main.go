@@ -1,14 +1,18 @@
 package main
 
 import (
+	"fmt"
 	"log"
-	"net/http"
+	"os"
 
+	"github.com/codegangsta/negroni"
 	"github.com/justinas/nosurf"
 	"github.com/tristanoneil/badger/routes"
 )
 
 func main() {
-	log.Println("Listening on port 3000")
-	http.ListenAndServe(":3000", nosurf.New(routes.Handlers()))
+	n := negroni.Classic()
+	n.UseHandler(nosurf.New(routes.Handlers()))
+	log.Println(fmt.Sprintf("Listening on port %s", os.Getenv("PORT")))
+	n.Run(fmt.Sprintf(":%s", os.Getenv("PORT")))
 }
