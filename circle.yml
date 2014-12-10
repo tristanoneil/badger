@@ -1,6 +1,9 @@
 machine:
   environment:
     DATABASE: badger_test
+    DATABASE_USER: ubuntu
+    DATABASE_PASSWORD: test
+    PORT: 8000
 database:
   override:
     - createdb badger_test

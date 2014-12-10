@@ -47,7 +47,7 @@ var _ = Describe("UserSignup", func() {
 
 		Step("user fills new gist form", func() {
 			Fill(page.Find("input[name=title]"), "Sample Gist")
-			Fill(page.Find("textarea[name=content]"), "Gist content.")
+			Expect(page.RunScript("$(elementID).val('Some content')", map[string]interface{}{"elementID": "textarea[name=content]"}, nil)).To(Succeed())
 			Submit(page.Find("input[type=submit]"))
 		})
 
