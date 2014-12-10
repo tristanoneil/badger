@@ -53,6 +53,20 @@ func (gist *Gist) Create() {
 }
 
 //
+// Save saves a gists properties in the database.
+//
+func (gist *Gist) Save() {
+	_, err := db.NamedExec(`
+		UPDATE gists SET title = :title,
+		content = :content, updated_at = :updated_at WHERE id = :id`, gist,
+	)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+//
 // Markdown returns rendered markdown from the gists Content.
 //
 func (gist Gist) Markdown() template.HTML {

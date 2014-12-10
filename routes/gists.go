@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"fmt"
 	"net/http"
 	"time"
 
@@ -46,4 +47,26 @@ func showGist(w http.ResponseWriter, r *http.Request) {
 
 	gist := models.FindGistForID(mux.Vars(r)["id"])
 	render("gists/show", w, r, map[string]interface{}{"Gist": gist})
+}
+
+func editGist(w http.ResponseWriter, r *http.Request) {
+	if !authorize(w, r) {
+		return
+	}
+
+	gist := models.FindGistForID(mux.Vars(r)["id"])
+
+	if r.Method == "POST" {
+		gist.Title = r.FormValue("title")
+		gist.Content = r.FormValue("content")
+		gist.UpdatedAt = time.Now()
+
+		if gist.Validate() {
+			gist.Save()
+			setSession(fmt.Sprintf("Successfully updated %s.", gist.Title), w, r)
+			http.Redirect(w, r, "/", http.StatusFound)
+		}
+	}
+
+	render("gists/edit", w, r, map[string]interface{}{"Gist": gist})
 }

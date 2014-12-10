@@ -57,11 +57,17 @@ body {
   border-bottom: solid 1px #e5e5e5;
   padding: 20px 0 20px 0;
   margin-bottom: 40px;
+  overflow: auto;
 }
 
 .sub-header h2 {
   margin: 0;
   font-weight: 300;
+  float: left;
+}
+
+.sub-header .button {
+  float: right;
 }
 
 .flash {
@@ -73,6 +79,7 @@ body {
   padding: 15px 0 15px 0;
   position: fixed;
   width: 100%;
+  z-index: 9999;
 }
 
 .main img {
@@ -129,7 +136,7 @@ input[type="text"], input[type="email"], input[type="password"], textarea {
   margin-bottom: 20px;
 }
 
-input[type="submit"] {
+input[type="submit"], .button {
   background-image: linear-gradient(#fcfcfc, #eee);
   background-color: #eee;
   border: solid 1px #d5d5d5;
@@ -140,6 +147,11 @@ input[type="submit"] {
   padding: 7px 12px;
 }
 
-input[type=submit]:hover {
+a.button {
+  color: #333;
+  text-decoration: none;
+}
+
+input[type=submit]:hover, .button:hover {
   background: #e2e2e2;
 }

@@ -1,0 +1,35 @@
+{{define "content"}}
+  <div class="sub-header">
+    <div class="inner">
+      <h2>Edit {{.Gist.Title}}</h2>
+    </div>
+  </div>
+
+  <div class="main">
+    <form action="/gists/{{.Gist.ID}}" method="post">
+      {{ with .Gist.Errors.Title }}
+      <p class="error">{{ . }}</p>
+      {{ end }}
+      <input type="text" name="title" value="{{.Gist.Title}}" placeholder="Title">
+      {{ with .Gist.Errors.Content }}
+      <p class="error">{{ . }}</p>
+      {{ end }}
+      <div id="editor">{{.Gist.Content}}</div>
+      <textarea name="content">{{.Gist.Content}}</textarea>
+      <input type="hidden" name="csrf_token" value="{{.Token}}">
+      <input type="submit" value="Update">
+    </form>
+  </div>
+
+  <script src="/ace/ace.js" type="text/javascript" charset="utf-8"></script>
+  <script src="/jquery-2.1.1.min.js" type="text/javascript"></script>
+  <script>
+  var textarea = $('textarea').hide();
+  var editor = ace.edit("editor");
+  editor.setTheme("ace/theme/github");
+  editor.getSession().setMode("ace/mode/markdown");
+  editor.getSession().on('change', function(){
+    textarea.val(editor.getSession().getValue());
+  });
+  </script>
+{{end}}
