@@ -13,13 +13,20 @@
 
           <div class="nav">
             {{if .CurrentUserID}}
+              <a href="/gists/new">New Gist</a>
               <a href="/logout">Logout</a>
             {{end}}
           </div>
         </div>
       </div>
 
-      {{.Flash}}
+      {{if .Flash}}
+        <div class="flash">
+          <div class="inner">
+            {{.Flash}}
+          </div>
+        </div>
+      {{end}}
 
       {{template "content" .}}
     </body>

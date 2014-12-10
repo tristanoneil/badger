@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/gorilla/mux"
 	"github.com/tristanoneil/badger/models"
 )
 
@@ -36,4 +37,13 @@ func newGist(w http.ResponseWriter, r *http.Request) {
 	}
 
 	render("gists/new", w, r, map[string]interface{}{"Gist": gist})
+}
+
+func showGist(w http.ResponseWriter, r *http.Request) {
+	if !authorize(w, r) {
+		return
+	}
+
+	gist := models.FindGist(mux.Vars(r)["id"])
+	render("gists/show", w, r, map[string]interface{}{"Gist": gist})
 }

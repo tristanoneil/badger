@@ -6,7 +6,8 @@ body {
 .header {
   background: #f6f6f6;
   border-bottom: solid 1px #e5e5e5;
-
+  height: 40px;
+  line-height: 40px;
 }
 
 .header a {
@@ -18,11 +19,9 @@ body {
   color: #4183C4;
 }
 
-.header .inner, .sub-header .inner {
+.header .inner, .sub-header .inner, .flash .inner {
   margin: 0 auto 0 auto;
   width: 50%;
-  height: 40px;
-  line-height: 40px;
 }
 
 .header h1 {
@@ -32,8 +31,14 @@ body {
 }
 
 .header .nav {
-  text-align: right;
   float: right;
+  font-size: 12px;
+  text-align: right;
+}
+
+.header .nav a {
+  margin-left: 10px;
+  font-weight: 700;
 }
 
 .main {
@@ -51,6 +56,17 @@ body {
 .sub-header h2 {
   margin: 0;
   font-weight: 300;
+}
+
+.flash {
+  background: #6BB673;
+  bottom: 0;
+  color: white;
+  font-size: 12px;
+  font-weight: 300;
+  padding: 15px 0 15px 0;
+  position: fixed;
+  width: 100%;
 }
 
 img {

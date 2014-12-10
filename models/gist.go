@@ -55,7 +55,7 @@ func (gist *Gist) Create() {
 //
 // Markdown returns rendered markdown from the gists Content.
 //
-func (gist *Gist) Markdown() template.HTML {
+func (gist Gist) Markdown() template.HTML {
 	return template.HTML(string(blackfriday.MarkdownCommon([]byte(gist.Content))))
 }
 
@@ -75,4 +75,10 @@ func GetGistsForUserID(UserID int) []Gist {
 	}
 
 	return gists
+}
+
+func FindGist(ID interface{}) Gist {
+	gist := Gist{}
+	db.Get(&gist, "SELECT * FROM gists WHERE id = $1", ID)
+	return gist
 }

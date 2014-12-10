@@ -6,13 +6,17 @@
   </div>
 
   <div class="main">
-    {{range .Gists}}
-      <h5>{{.Title}}</h5>
+    {{if .Gists}}
+      {{range .Gists}}
+        <h5>{{.Title}}</h5>
 
-      <div class="gist">
-        <a href="#" class="link-overlay"></a>
-        {{.Markdown}}
-      </div>
+        <div class="gist">
+          <a href="/gists/{{.ID}}" class="link-overlay"></a>
+          {{.Markdown}}
+        </div>
+      {{end}}
+    {{else}}
+      <p>You haven't created any Gists yet.</p>
     {{end}}
   </div>
 {{end}}
