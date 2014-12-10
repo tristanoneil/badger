@@ -56,7 +56,7 @@ func (user User) GravatarURL(size int) string {
 // Create creates a new user in the database.
 //
 func (user *User) Create() {
-	_, err := db.NamedExec(
+	_, err := Db.NamedExec(
 		`INSERT into users (email, password)
 		VALUES (:email, crypt(:password, gen_salt('bf')))`, user,
 	)
@@ -71,7 +71,7 @@ func (user *User) Create() {
 //
 func IsUniqueUser(email string) bool {
 	var count int
-	err := db.Get(&count, "SELECT COUNT(*) FROM users WHERE email = $1", email)
+	err := Db.Get(&count, "SELECT COUNT(*) FROM users WHERE email = $1", email)
 
 	if err != nil {
 		log.Fatal(err)
@@ -86,7 +86,7 @@ func IsUniqueUser(email string) bool {
 //
 func IsValidUser(email string, password string) bool {
 	var count int
-	err := db.Get(
+	err := Db.Get(
 		&count, `SELECT COUNT(*) FROM users WHERE email = $1
 		AND password = crypt($2, password)`, email, password,
 	)
@@ -103,7 +103,7 @@ func IsValidUser(email string, password string) bool {
 //
 func FindUserForEmail(email string) User {
 	var user User
-	err := db.Get(&user, "SELECT * FROM users WHERE email = $1", email)
+	err := Db.Get(&user, "SELECT * FROM users WHERE email = $1", email)
 
 	if err != nil {
 		log.Fatal(err)

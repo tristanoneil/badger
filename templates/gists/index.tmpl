@@ -8,7 +8,7 @@
   <div class="main">
     {{if .Gists}}
       {{range .Gists}}
-        <h5>{{.Title}}</h5>
+        <h5><a href="/gists/{{.ID}}">{{.Title}}</a></h5>
 
         <div class="gist">
           <a href="/gists/{{.ID}}" class="link-overlay"></a>

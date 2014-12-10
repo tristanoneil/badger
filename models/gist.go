@@ -42,7 +42,7 @@ func (gist *Gist) Validate() bool {
 // Create creates a new gist in the database.
 //
 func (gist *Gist) Create() {
-	_, err := db.NamedExec(`
+	_, err := Db.NamedExec(`
 		INSERT into gists (title, content, user_id, created_at, updated_at)
 		VALUES (:title, :content, :user_id, :created_at, :updated_at)`, gist,
 	)
@@ -56,7 +56,7 @@ func (gist *Gist) Create() {
 // Save saves a gists properties in the database.
 //
 func (gist *Gist) Save() {
-	_, err := db.NamedExec(`
+	_, err := Db.NamedExec(`
 		UPDATE gists SET title = :title,
 		content = :content, updated_at = :updated_at WHERE id = :id`, gist,
 	)
@@ -78,7 +78,7 @@ func (gist Gist) Markdown() template.HTML {
 //
 func GetGistsForUserID(UserID int) []Gist {
 	gists := []Gist{}
-	err := db.Select(
+	err := Db.Select(
 		&gists,
 		`SELECT * FROM gists WHERE user_id = $1 ORDER BY created_at DESC`,
 		UserID,
@@ -96,6 +96,6 @@ func GetGistsForUserID(UserID int) []Gist {
 //
 func FindGistForID(ID interface{}) Gist {
 	gist := Gist{}
-	db.Get(&gist, "SELECT * FROM gists WHERE id = $1", ID)
+	Db.Get(&gist, "SELECT * FROM gists WHERE id = $1", ID)
 	return gist
 }

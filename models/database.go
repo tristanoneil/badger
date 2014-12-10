@@ -15,12 +15,12 @@ import (
 )
 
 var (
-	db *sqlx.DB
+	Db *sqlx.DB
 )
 
 func init() {
 	var err error
-	db, err = sqlx.Connect(
+	Db, err = sqlx.Connect(
 		"postgres",
 		fmt.Sprintf("dbname=%s sslmode=disable user=%s password=%s",
 			os.Getenv("DATABASE"),
@@ -47,7 +47,7 @@ func MigrateDB() {
 
 	migrationsBox.Walk("", func(path string, info os.FileInfo, err error) error {
 		sql, _ := migrationsBox.String(path)
-		db.MustExec(sql)
+		Db.MustExec(sql)
 		return nil
 	})
 }
@@ -56,6 +56,6 @@ func MigrateDB() {
 // ResetDB resets the database schema, useful for testing.
 //
 func ResetDB() {
-	db.MustExec("drop schema public cascade")
-	db.MustExec("create schema public")
+	Db.MustExec("drop schema public cascade")
+	Db.MustExec("create schema public")
 }
