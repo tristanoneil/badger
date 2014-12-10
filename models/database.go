@@ -22,8 +22,11 @@ func init() {
 	var err error
 	db, err = sqlx.Connect(
 		"postgres",
-		fmt.Sprintf("dbname=%s sslmode=disable", os.Getenv("DATABASE")),
-	)
+		fmt.Sprintf("dbname=%s sslmode=disable user=%s password=%s",
+			os.Getenv("DATABASE"),
+			os.Getenv("DATABASE_USER"),
+			os.Getenv("DATABASE_PASSWORD"),
+		))
 
 	if err != nil {
 		log.Fatal(err)
