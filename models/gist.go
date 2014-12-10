@@ -77,7 +77,10 @@ func GetGistsForUserID(UserID int) []Gist {
 	return gists
 }
 
-func FindGist(ID interface{}) Gist {
+//
+// FindGistForID returns a Gist for a given ID.
+//
+func FindGistForID(ID interface{}) Gist {
 	gist := Gist{}
 	db.Get(&gist, "SELECT * FROM gists WHERE id = $1", ID)
 	return gist

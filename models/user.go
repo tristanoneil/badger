@@ -1,6 +1,11 @@
 package models
 
-import "log"
+import (
+	"crypto/md5"
+	"fmt"
+	"io"
+	"log"
+)
 
 //
 // User is used to map users in the database.
@@ -36,6 +41,15 @@ func (user *User) Validate() bool {
 	}
 
 	return len(user.Errors) == 0
+}
+
+//
+// GravatarURL returns a Gravatar URL for a given user and size.
+//
+func (user User) GravatarURL(size int) string {
+	h := md5.New()
+	io.WriteString(h, user.Email)
+	return fmt.Sprintf("https://secure.gravatar.com/avatar/%x?s=%d", h.Sum(nil), size)
 }
 
 //
@@ -85,15 +99,15 @@ func IsValidUser(email string, password string) bool {
 }
 
 //
-// GetUserIDForEmail returns a users id for a given email address.
+// FindUserForEmail returns a users id for a given email address.
 //
-func GetUserIDForEmail(email string) int {
-	var ID int
-	err := db.Get(&ID, "SELECT id FROM users WHERE email = $1", email)
+func FindUserForEmail(email string) User {
+	var user User
+	err := db.Get(&user, "SELECT * FROM users WHERE email = $1", email)
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	return ID
+	return user
 }

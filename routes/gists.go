@@ -13,7 +13,7 @@ func gists(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	gists := models.GetGistsForUserID(currentUserID(r))
+	gists := models.GetGistsForUserID(currentUser(r).ID)
 	render("gists/index", w, r, map[string]interface{}{"Gists": gists})
 }
 
@@ -23,7 +23,7 @@ func newGist(w http.ResponseWriter, r *http.Request) {
 	}
 
 	gist := &models.Gist{
-		UserID:    currentUserID(r),
+		UserID:    currentUser(r).ID,
 		Title:     r.FormValue("title"),
 		Content:   r.FormValue("content"),
 		CreatedAt: time.Now(),
@@ -44,6 +44,6 @@ func showGist(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	gist := models.FindGist(mux.Vars(r)["id"])
+	gist := models.FindGistForID(mux.Vars(r)["id"])
 	render("gists/show", w, r, map[string]interface{}{"Gist": gist})
 }

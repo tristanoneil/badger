@@ -12,7 +12,8 @@
           <h1><a href="/">Badger</a></h1>
 
           <div class="nav">
-            {{if .CurrentUserID}}
+            {{if .CurrentUser}}
+              <img src="{{.CurrentUser.GravatarURL 20}}">
               <a href="/gists/new">New Gist</a>
               <a href="/logout">Logout</a>
             {{end}}

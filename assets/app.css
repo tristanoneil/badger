@@ -19,6 +19,12 @@ body {
   color: #4183C4;
 }
 
+.header img {
+  border-radius: 3px;
+  float: left;
+  margin-top: 10px;
+}
+
 .header .inner, .sub-header .inner, .flash .inner {
   margin: 0 auto 0 auto;
   width: 50%;
@@ -69,7 +75,7 @@ body {
   width: 100%;
 }
 
-img {
+.main img {
   width: 100%
 }
 

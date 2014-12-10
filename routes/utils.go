@@ -34,7 +34,7 @@ func render(templateName string, w http.ResponseWriter,
 	binding["Token"] = nosurf.Token(r)
 
 	if loggedIn(r) {
-		binding["CurrentUserID"] = currentUserID(r)
+		binding["CurrentUser"] = currentUser(r)
 	}
 
 	templateBox, err := rice.FindBox("../templates")
@@ -72,9 +72,9 @@ func authorize(w http.ResponseWriter, r *http.Request) bool {
 	return true
 }
 
-func currentUserID(r *http.Request) int {
+func currentUser(r *http.Request) models.User {
 	session, _ := store.Get(r, "auth")
-	return models.GetUserIDForEmail(session.Values["Email"].(string))
+	return models.FindUserForEmail(session.Values["Email"].(string))
 }
 
 func loggedIn(r *http.Request) bool {
