@@ -4,6 +4,8 @@
 
 Badger is a simplified self hosted Gist alternative built with Go.
 
+![Badger](http://cl.ly/image/06243x3A0i24/download/badger.gif)
+
 ## Setup
 
 First you must create a PostgreSQL database for Badger like so: `createdb badger`.
