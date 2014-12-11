@@ -10,12 +10,12 @@ body {
   line-height: 40px;
 }
 
-.header a {
+a {
   color: #333;
   text-decoration: none;
 }
 
-.header a:hover {
+a:hover {
   color: #4183C4;
 }
 

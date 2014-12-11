@@ -1,0 +1,12 @@
+{{ define "gists/form"}}
+  {{ with .Gist.Errors.Title }}
+  <p class="error">{{ . }}</p>
+  {{ end }}
+  <input type="text" name="title" value="{{.Gist.Title}}" placeholder="Title">
+  {{ with .Gist.Errors.Content }}
+  <p class="error">{{ . }}</p>
+  {{ end }}
+  <div id="editor">{{.Gist.Content}}</div>
+  <textarea name="content">{{.Gist.Content}}</textarea>
+  <input type="hidden" name="csrf_token" value="{{.Token}}">
+{{end}}

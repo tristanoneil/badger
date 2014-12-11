@@ -47,6 +47,12 @@ func render(templateName string, w http.ResponseWriter,
 	tstr, _ := templateBox.String(fmt.Sprintf("%s.tmpl", templateName))
 	lstr += tstr
 
+	templateBox.Walk("includes", func(path string, info os.FileInfo, err error) error {
+		include, _ := templateBox.String(path)
+		lstr += include
+		return nil
+	})
+
 	var t *template.Template
 	t, err = template.New("layout").Parse(lstr)
 
