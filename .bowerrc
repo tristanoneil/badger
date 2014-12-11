@@ -1,0 +1,6 @@
+{
+  "directory" : "assets/vendor",
+  "scripts": {
+    "postinstall": "rm -rf assets/vendor/ace-builds/demo"
+  }
+}

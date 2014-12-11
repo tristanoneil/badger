@@ -1,0 +1,21 @@
+{
+  "name": "badger",
+  "version": "0.0.1",
+  "homepage": "https://github.com/tristanoneil/badger",
+  "authors": [
+    "Tristan O'Neil <tristanoneil@gmail.com>"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.1",
+    "ace-builds": "~1.1.8"
+  }
+}

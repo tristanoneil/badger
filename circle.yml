@@ -4,6 +4,9 @@ machine:
     DATABASE_USER: ubuntu
     DATABASE_PASSWORD: test
     PORT: 8000
+dependencies:
+  pre:
+    - bower install
 database:
   override:
     - createdb badger_test

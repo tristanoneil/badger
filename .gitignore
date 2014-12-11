@@ -2,3 +2,4 @@
 builds
 tmp
 .env
+assets/vendor
