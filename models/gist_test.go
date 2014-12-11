@@ -40,12 +40,12 @@ var _ = Describe("Models/Gist", func() {
 	Describe("Create", func() {
 		It("creates a new gist in the database", func() {
 			var count int
-			models.Db.Get(&count, "SELECT count(*) FROM gists;")
+			models.Db.Get(&count, "SELECT count(*) FROM gists")
 			Expect(count).To(Equal(0))
 
 			validGist.Create()
 
-			models.Db.Get(&count, "SELECT count(*) FROM gists;")
+			models.Db.Get(&count, "SELECT count(*) FROM gists")
 			Expect(count).To(Equal(1))
 		})
 	})

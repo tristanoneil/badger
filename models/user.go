@@ -24,7 +24,7 @@ type User struct {
 func (user *User) Validate() bool {
 	user.Errors = make(map[string]string)
 
-	if !IsUniqueUser(user.Email) {
+	if !user.IsUnique() {
 		user.Errors["Email"] = "Email must be unique."
 	}
 
@@ -67,11 +67,11 @@ func (user *User) Create() {
 }
 
 //
-// IsUniqueUser determines if a given email address is unique.
+// IsUnique determines if a given user is unique based on their email.
 //
-func IsUniqueUser(email string) bool {
+func (user *User) IsUnique() bool {
 	var count int
-	err := Db.Get(&count, "SELECT COUNT(*) FROM users WHERE email = $1", email)
+	err := Db.Get(&count, "SELECT COUNT(*) FROM users WHERE email = $1", user.Email)
 
 	if err != nil {
 		log.Fatal(err)
