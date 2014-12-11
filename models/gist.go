@@ -53,6 +53,17 @@ func (gist *Gist) Create() {
 }
 
 //
+// Delete deletes a gist in the database.
+//
+func (gist *Gist) Delete() {
+	_, err := Db.NamedExec("DELETE FROM gists WHERE id = :id", gist)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+//
 // Save saves a gists properties in the database.
 //
 func (gist *Gist) Save() {

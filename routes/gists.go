@@ -70,3 +70,14 @@ func editGist(w http.ResponseWriter, r *http.Request) {
 
 	render("gists/edit", w, r, map[string]interface{}{"Gist": gist})
 }
+
+func deleteGist(w http.ResponseWriter, r *http.Request) {
+	if !authorize(w, r) {
+		return
+	}
+
+	gist := models.FindGistForID(mux.Vars(r)["id"])
+	gist.Delete()
+	setSession(fmt.Sprintf("Successfully deleted %s.", gist.Title), w, r)
+	http.Redirect(w, r, "/", http.StatusFound)
+}

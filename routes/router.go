@@ -15,6 +15,7 @@ func Handlers() *mux.Router {
 	router.HandleFunc("/gists/{id:[0-9]+}", showGist).Methods("GET")
 	router.HandleFunc("/gists/{id:[0-9]+}", editGist).Methods("POST")
 	router.HandleFunc("/gists/{id:[0-9]+}/edit", editGist).Methods("GET")
+	router.HandleFunc("/gists/{id:[0-9]+}/delete", deleteGist).Methods("GET")
 	router.HandleFunc("/signup", signup).Methods("GET", "POST")
 	router.HandleFunc("/login", login).Methods("GET", "POST")
 	router.HandleFunc("/logout", logout).Methods("GET")
