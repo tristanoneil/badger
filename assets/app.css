@@ -1,5 +1,5 @@
 body {
-  margin: 0;
+  margin: 0 0 40px 0;
   font-family: Helvetica, sans-serif;
 }
 
@@ -10,8 +10,12 @@ body {
   line-height: 40px;
 }
 
-a {
+.header a {
   color: #333;
+}
+
+a {
+  color: #4183C4;
   text-decoration: none;
 }
 
@@ -27,7 +31,7 @@ a:hover {
 
 .header .inner, .sub-header .inner, .flash .inner {
   margin: 0 auto 0 auto;
-  width: 50%;
+  width: 70%;
 }
 
 .header h1 {
@@ -48,7 +52,7 @@ a:hover {
 }
 
 .main {
-  width: 50%;
+  width: 70%;
   margin: 0 auto 0 auto;
 }
 
@@ -68,6 +72,7 @@ a:hover {
 
 .sub-header .button {
   float: right;
+  margin-left: 10px;
 }
 
 .flash {
@@ -82,18 +87,45 @@ a:hover {
   z-index: 9999;
 }
 
-.main img {
-  width: 100%
-}
-
 .gist {
   padding: 20px;
   display: block;
   position: relative;
 }
 
+.gist img {
+  width: 100%
+}
+
+.gist p {
+  line-height: 25px;
+}
+
+.gist h1 {
+  border-bottom: solid 1px #eee;
+  padding-bottom: 15px;
+}
+
+.gist code {
+  padding: 0.2em;
+  background-color: #f4f4f4;
+  border-radius: 3px;
+}
+
+.gist pre {
+  background: #f7f7f7;
+  padding: 16px;
+  border-radius: 3px;
+}
+
+.gist.show {
+  border: solid 1px #ddd;
+  border-radius: 3px;
+}
+
 .link-overlay {
   border: solid 1px #ddd;
+  border-radius: 3px;
   left: 0;
   top: 0;
   height: 100%;
@@ -130,10 +162,19 @@ input[type="text"], input[type="email"], input[type="password"], textarea {
   box-sizing: border-box;
   color: #333;
   display: block;
-  font-size: 14px;
+  font-size: 12px;
   width: 100%;
   padding: 7px 8px;
   margin-bottom: 20px;
+}
+
+.ace-github .ace_gutter {
+  background: white !important;
+  border-right: solid 1px #EEEEEE;
+}
+
+.ace_active-line, .ace_gutter-active-line {
+  background: #F5F5F5 !important;
 }
 
 input[type="submit"], .button {
@@ -150,6 +191,10 @@ input[type="submit"], .button {
 a.button {
   color: #333;
   text-decoration: none;
+}
+
+input[type="submit"].danger, .button.danger, a.button.danger {
+  color: #990000;
 }
 
 input[type=submit]:hover, .button:hover {

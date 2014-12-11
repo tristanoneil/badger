@@ -3,10 +3,13 @@
     <div class="inner">
       <h2>{{.Gist.Title}}</h2>
       <a href="/gists/{{.Gist.ID}}/edit" class="button">Edit</a>
+      <a href="/gists/{{.Gist.ID}}/delete" class="button danger">Delete</a>
     </div>
   </div>
 
   <div class="main">
-    {{.Gist.Markdown}}
+    <div class="show gist">
+      {{.Gist.Markdown}}
+    </div>
   </div>
 {{end}}
