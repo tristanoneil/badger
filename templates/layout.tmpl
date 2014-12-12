@@ -29,6 +29,14 @@
         </div>
       {{end}}
 
+      {{if .Error}}
+      <div class="flash error">
+        <div class="inner">
+          {{.Error}}
+        </div>
+      </div>
+      {{end}}
+
       {{template "content" .}}
     </body>
   </html>

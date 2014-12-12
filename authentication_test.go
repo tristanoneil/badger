@@ -19,7 +19,7 @@ var _ = Describe("UserSignup", func() {
 	)
 
 	BeforeEach(func() {
-		server = httptest.NewServer(routes.Handlers())
+		server = httptest.NewServer(routes.Router())
 
 		var err error
 		page, err = agoutiDriver.Page()
@@ -39,13 +39,14 @@ var _ = Describe("UserSignup", func() {
 
 		Step("user fills out signout form", func() {
 			Fill(page.Find("input[name=email]"), "john@example.com")
+			Fill(page.Find("input[name=username]"), "john")
 			Fill(page.Find("input[name=password]"), "password")
 			Fill(page.Find("input[name=password_confirmation]"), "password")
 			Submit(page.Find("input[type=submit]"))
 		})
 
 		Step("user is redirected to their gists", func() {
-			Expect(page).To(HaveURL(fmt.Sprintf("%s/", server.URL)))
+			Expect(page).To(HaveURL(fmt.Sprintf("%s/john", server.URL)))
 		})
 	})
 
@@ -62,7 +63,7 @@ var _ = Describe("UserSignup", func() {
 		})
 
 		Step("user is redirected to their gists", func() {
-			Expect(page).To(HaveURL(fmt.Sprintf("%s/", server.URL)))
+			Expect(page).To(HaveURL(fmt.Sprintf("%s/john", server.URL)))
 		})
 	})
 })

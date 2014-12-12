@@ -14,7 +14,19 @@ func gists(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	gists := models.GetGistsForUserID(currentUser(r).ID)
+	user, _ := models.FindUser(currentUser(r).Username)
+	http.Redirect(w, r, fmt.Sprintf("/%s", user.Username), http.StatusFound)
+}
+
+func usersGists(w http.ResponseWriter, r *http.Request) {
+	user, err := models.FindUser(mux.Vars(r)["username"])
+
+	if err != nil {
+		w.WriteHeader(404)
+		return
+	}
+
+	gists := user.Gists()
 	render("gists/index", w, r, map[string]interface{}{"Gists": gists})
 }
 

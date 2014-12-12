@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/GeertJohan/go.rice"
 	"github.com/gorilla/sessions"
@@ -29,6 +30,11 @@ func render(templateName string, w http.ResponseWriter,
 	if flash, ok := session.Values["Flash"].(string); ok {
 		binding["Flash"] = flash
 		setSession("", w, r)
+	}
+
+	if flash, ok := session.Values["Error"].(string); ok {
+		binding["Error"] = flash
+		setSession("", w, r, "Error")
 	}
 
 	binding["Token"] = nosurf.Token(r)
@@ -80,7 +86,8 @@ func authorize(w http.ResponseWriter, r *http.Request) bool {
 
 func currentUser(r *http.Request) models.User {
 	session, _ := store.Get(r, "auth")
-	return models.FindUserForEmail(session.Values["Email"].(string))
+	user, _ := models.FindUser(session.Values["Email"].(string))
+	return user
 }
 
 func loggedIn(r *http.Request) bool {
@@ -100,4 +107,14 @@ func setSession(message interface{}, w http.ResponseWriter,
 	session, _ := store.Get(r, "auth")
 	session.Values[k] = message
 	session.Save(r, w)
+}
+
+func usernameConflictsWithRoute(username string) bool {
+	for _, route := range routes() {
+		if strings.Contains(route.Path, username) {
+			return true
+		}
+	}
+
+	return false
 }

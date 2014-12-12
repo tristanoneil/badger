@@ -9,16 +9,23 @@ import (
 func signup(w http.ResponseWriter, r *http.Request) {
 	user := &models.User{
 		Email:                r.FormValue("email"),
+		Username:             r.FormValue("username"),
 		Password:             r.FormValue("password"),
 		PasswordConfirmation: r.FormValue("password_confirmation"),
 	}
 
-	if r.Method == "POST" && user.Validate() {
-		user.Create()
-		setSession("Successfully signed up.", w, r)
-		setSession(user.Email, w, r, "Email")
-		http.Redirect(w, r, "/", http.StatusFound)
-		return
+	if r.Method == "POST" {
+		if usernameConflictsWithRoute(user.Username) {
+			setSession("Username is a reserved word.", w, r, "Error")
+		} else {
+			if user.Validate() {
+				user.Create()
+				setSession("Successfully signed up.", w, r)
+				setSession(user.Email, w, r, "Email")
+				http.Redirect(w, r, "/", http.StatusFound)
+				return
+			}
+		}
 	}
 
 	render("signup", w, r, map[string]interface{}{"User": user})

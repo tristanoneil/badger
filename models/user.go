@@ -13,6 +13,7 @@ import (
 type User struct {
 	ID                   int    `db:"id"`
 	Email                string `db:"email"`
+	Username             string `db:"username"`
 	Password             string `db:"password"`
 	PasswordConfirmation string
 	Errors               map[string]string
@@ -24,12 +25,20 @@ type User struct {
 func (user *User) Validate() bool {
 	user.Errors = make(map[string]string)
 
-	if !user.IsUnique() {
+	if !user.UniqueEmail() {
 		user.Errors["Email"] = "Email must be unique."
 	}
 
 	if user.Email == "" {
 		user.Errors["Email"] = "You must provide an email."
+	}
+
+	if user.Username == "" {
+		user.Errors["Username"] = "You must provide a username."
+	}
+
+	if !user.UniqueUsername() {
+		user.Errors["Username"] = "Username must be unique."
 	}
 
 	if user.Password == "" {
@@ -57,8 +66,8 @@ func (user User) GravatarURL(size int) string {
 //
 func (user *User) Create() {
 	_, err := Db.NamedExec(
-		`INSERT into users (email, password)
-		VALUES (:email, crypt(:password, gen_salt('bf')))`, user,
+		`INSERT into users (email, username, password)
+		VALUES (:email, :username, crypt(:password, gen_salt('bf')))`, user,
 	)
 
 	if err != nil {
@@ -67,9 +76,9 @@ func (user *User) Create() {
 }
 
 //
-// IsUnique determines if a given user is unique based on their email.
+// UniqueEmail determines if a given user is unique based on their email.
 //
-func (user *User) IsUnique() bool {
+func (user *User) UniqueEmail() bool {
 	var count int
 	err := Db.Get(&count, "SELECT COUNT(*) FROM users WHERE email = $1", user.Email)
 
@@ -78,6 +87,38 @@ func (user *User) IsUnique() bool {
 	}
 
 	return count == 0
+}
+
+//
+// UniqueUsername determines if a given user is unique based on their email.
+//
+func (user *User) UniqueUsername() bool {
+	var count int
+	err := Db.Get(&count, "SELECT COUNT(*) FROM users WHERE username = $1", user.Username)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return count == 0
+}
+
+//
+// Gists returns all gists for a user oredered by the created at date.
+//
+func (user *User) Gists() []Gist {
+	gists := []Gist{}
+	err := Db.Select(
+		&gists,
+		`SELECT * FROM gists WHERE user_id = $1 ORDER BY created_at DESC`,
+		user.ID,
+	)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return gists
 }
 
 //
@@ -99,15 +140,10 @@ func IsValidUser(email string, password string) bool {
 }
 
 //
-// FindUserForEmail returns a users id for a given email address.
+// FindUser returns a user for a given identifier.
 //
-func FindUserForEmail(email string) User {
+func FindUser(identifier string) (User, error) {
 	var user User
-	err := Db.Get(&user, "SELECT * FROM users WHERE email = $1", email)
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	return user
+	err := Db.Get(&user, "SELECT * FROM users WHERE email = $1 OR username = $1", identifier)
+	return user, err
 }

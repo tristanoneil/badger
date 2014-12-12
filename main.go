@@ -12,7 +12,7 @@ import (
 
 func main() {
 	n := negroni.Classic()
-	n.UseHandler(nosurf.New(routes.Handlers()))
+	n.UseHandler(nosurf.New(routes.Router()))
 	log.Println(fmt.Sprintf("Listening on port %s", os.Getenv("PORT")))
 	n.Run(fmt.Sprintf(":%s", os.Getenv("PORT")))
 }

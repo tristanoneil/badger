@@ -19,7 +19,7 @@ var _ = Describe("UserSignup", func() {
 	)
 
 	BeforeEach(func() {
-		server = httptest.NewServer(routes.Handlers())
+		server = httptest.NewServer(routes.Router())
 
 		var err error
 		page, err = agoutiDriver.Page()
@@ -35,6 +35,7 @@ var _ = Describe("UserSignup", func() {
 		Step("user signs up", func() {
 			Expect(page.Navigate(fmt.Sprintf("%s/signup", server.URL))).To(Succeed())
 			Fill(page.Find("input[name=email]"), "jack@example.com")
+			Fill(page.Find("input[name=username]"), "jack")
 			Fill(page.Find("input[name=password]"), "password")
 			Fill(page.Find("input[name=password_confirmation]"), "password")
 			Submit(page.Find("input[type=submit]"))
@@ -58,14 +59,14 @@ var _ = Describe("UserSignup", func() {
 		})
 
 		Step("user is redirected to their gists", func() {
-			Expect(page).To(HaveURL(fmt.Sprintf("%s/", server.URL)))
+			Expect(page).To(HaveURL(fmt.Sprintf("%s/jack", server.URL)))
 		})
 	})
 
 	Scenario("updating gists", func() {
 		Step("user vists gists page", func() {
 			Expect(page.Navigate(fmt.Sprintf("%s/", server.URL))).To(Succeed())
-			Expect(page).To(HaveURL(fmt.Sprintf("%s/", server.URL)))
+			Expect(page).To(HaveURL(fmt.Sprintf("%s/jack", server.URL)))
 		})
 
 		Step("user clicks on a gist", func() {

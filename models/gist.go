@@ -85,24 +85,6 @@ func (gist Gist) Markdown() template.HTML {
 }
 
 //
-// GetGistsForUserID Gets all gists for a given user id.
-//
-func GetGistsForUserID(UserID int) []Gist {
-	gists := []Gist{}
-	err := Db.Select(
-		&gists,
-		`SELECT * FROM gists WHERE user_id = $1 ORDER BY created_at DESC`,
-		UserID,
-	)
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	return gists
-}
-
-//
 // FindGistForID returns a Gist for a given ID.
 //
 func FindGistForID(ID interface{}) Gist {

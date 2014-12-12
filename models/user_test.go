@@ -13,12 +13,14 @@ var _ = Describe("Models/User", func() {
 	BeforeEach(func() {
 		validUser = models.User{
 			Email:                "user@example.com",
+			Username:             "user",
 			Password:             "password",
 			PasswordConfirmation: "password",
 		}
 
 		invalidUser = models.User{
 			Email:                "user@example.com",
+			Username:             "user",
 			Password:             "password",
 			PasswordConfirmation: "notpassword",
 		}
@@ -58,9 +60,15 @@ var _ = Describe("Models/User", func() {
 		})
 	})
 
-	Describe("IsUniqueEmail", func() {
+	Describe("UniqueEmail", func() {
 		It("returns false if a user isn't unique", func() {
-			Expect(invalidUser.IsUnique()).To(Equal(false))
+			Expect(invalidUser.UniqueEmail()).To(Equal(false))
+		})
+	})
+
+	Describe("UniqueUsername", func() {
+		It("returns false if a user isn't unique", func() {
+			Expect(invalidUser.UniqueUsername()).To(Equal(false))
 		})
 	})
 
@@ -74,9 +82,10 @@ var _ = Describe("Models/User", func() {
 		})
 	})
 
-	Describe("FindUserForEmail", func() {
+	Describe("FindUser", func() {
 		It("returns a user for a given email", func() {
-			Expect(models.FindUserForEmail("user@example.com").Email).To(Equal(validUser.Email))
+			user, _ := models.FindUser("user@example.com")
+			Expect(user.Email).To(Equal(validUser.Email))
 		})
 	})
 })

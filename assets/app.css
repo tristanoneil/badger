@@ -87,6 +87,10 @@ a:hover {
   z-index: 9999;
 }
 
+.flash.error {
+  background: #E13731;
+}
+
 .gist {
   padding: 20px;
   display: block;

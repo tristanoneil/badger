@@ -11,6 +11,10 @@
       {{ with .User.Errors.Email }}
         <p class="error">{{ . }}</p>
       {{ end }}
+      <input type="text" name="username" value="{{.User.Username}}" placeholder="Username">
+      {{ with .User.Errors.Username }}
+      <p class="error">{{ . }}</p>
+      {{ end }}
       <input type="password" name="password" placeholder="Password">
       {{ with .User.Errors.Password }}
       <p class="error">{{ . }}</p>
