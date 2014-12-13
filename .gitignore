@@ -3,3 +3,6 @@ builds
 tmp
 .env
 assets/vendor
+node_modules
+dist
+gin-bin

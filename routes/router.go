@@ -22,7 +22,7 @@ func Router() *mux.Router {
 		}
 	}
 
-	router.PathPrefix("/").Handler(http.FileServer(rice.MustFindBox("../assets").HTTPBox()))
+	router.PathPrefix("/").Handler(http.FileServer(rice.MustFindBox("../dist").HTTPBox()))
 	return router
 }
 

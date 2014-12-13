@@ -17,5 +17,10 @@
   "dependencies": {
     "jquery": "~2.1.1",
     "ace-builds": "~1.1.8"
+  },
+  "overrides": {
+    "ace-builds": {
+      "main": ["src-min/ace.js", "src-min/theme-github.js", "src-min/mode-markdown.js"]
+    }
   }
 }

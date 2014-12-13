@@ -1,0 +1,12 @@
+{
+  "name": "badger",
+  "version": "0.0.1",
+  "author": "Tristan O'Neil",
+  "license": "MIT",
+  "devDependencies": {
+    "gulp": "^3.8.8",
+    "gulp-concat": "^2.4.1",
+    "gulp-sass": "^1.1.0",
+    "main-bower-files": "^2.1.0"
+  }
+}
