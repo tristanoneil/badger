@@ -4,9 +4,10 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"regexp"
 
-	"github.com/GeertJohan/go.rice"
 	"github.com/jmoiron/sqlx"
+	"github.com/tristanoneil/badger/static"
 
 	//
 	// Allows sqlx to connect to Postgres.
@@ -39,17 +40,14 @@ func init() {
 // MigrateDB loads all SQL files from migrations and executes them.
 //
 func MigrateDB() {
-	migrationsBox, err := rice.FindBox("../migrations")
+	for _, f := range static.AssetNames() {
+		match, _ := regexp.MatchString("migrations", f)
 
-	if err != nil {
-		log.Fatal(err)
+		if match {
+			sql, _ := static.Asset(f)
+			Db.MustExec(string(sql))
+		}
 	}
-
-	migrationsBox.Walk("", func(path string, info os.FileInfo, err error) error {
-		sql, _ := migrationsBox.String(path)
-		Db.MustExec(sql)
-		return nil
-	})
 }
 
 //

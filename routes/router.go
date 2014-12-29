@@ -3,8 +3,9 @@ package routes
 import (
 	"net/http"
 
-	"github.com/GeertJohan/go.rice"
+	"github.com/elazarl/go-bindata-assetfs"
 	"github.com/gorilla/mux"
+	"github.com/tristanoneil/badger/static"
 )
 
 type route struct {
@@ -22,7 +23,12 @@ func Router() *mux.Router {
 		}
 	}
 
-	router.PathPrefix("/").Handler(http.FileServer(rice.MustFindBox("../dist").HTTPBox()))
+	router.PathPrefix("/").Handler(http.FileServer(&assetfs.AssetFS{
+		Asset:    static.Asset,
+		AssetDir: static.AssetDir,
+		Prefix:   "dist",
+	}))
+
 	return router
 }
 

@@ -6,12 +6,13 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"regexp"
 	"strings"
 
-	"github.com/GeertJohan/go.rice"
 	"github.com/gorilla/sessions"
 	"github.com/justinas/nosurf"
 	"github.com/tristanoneil/badger/models"
+	"github.com/tristanoneil/badger/static"
 )
 
 var (
@@ -43,24 +44,21 @@ func render(templateName string, w http.ResponseWriter,
 		binding["CurrentUser"] = currentUser(r)
 	}
 
-	templateBox, err := rice.FindBox("../templates")
+	lbstr, _ := static.Asset("templates/layout.tmpl")
+	tbstr, _ := static.Asset(fmt.Sprintf("templates/%s.tmpl", templateName))
+	lstr := string(lbstr) + string(tbstr)
 
-	if err != nil {
-		log.Fatal(err)
+	for _, f := range static.AssetNames() {
+		match, _ := regexp.MatchString("includes", f)
+
+		if match {
+			include, _ := static.Asset(f)
+			lstr += string(include)
+		}
 	}
 
-	lstr, _ := templateBox.String("layout.tmpl")
-	tstr, _ := templateBox.String(fmt.Sprintf("%s.tmpl", templateName))
-	lstr += tstr
-
-	templateBox.Walk("includes", func(path string, info os.FileInfo, err error) error {
-		include, _ := templateBox.String(path)
-		lstr += include
-		return nil
-	})
-
 	var t *template.Template
-	t, err = template.New("layout").Parse(lstr)
+	t, err := template.New("layout").Parse(lstr)
 
 	if err != nil {
 		log.Fatal(err)
