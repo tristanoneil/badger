@@ -3,6 +3,7 @@ CREATE TABLE IF NOT EXISTS gists (
   user_id int NOT NULL,
   title varchar(80) NOT NULL,
   content text,
+  public boolean NOT NULL,
   created_at timestamp without time zone NOT NULL,
   updated_at timestamp without time zone NOT NULL
 );

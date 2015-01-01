@@ -104,6 +104,25 @@ func (user *User) UniqueUsername() bool {
 }
 
 //
+// PublicGists returns all public gists for a user ordered by the created at date.
+//
+func (user *User) PublicGists() []Gist {
+	gists := []Gist{}
+	err := Db.Select(
+		&gists,
+		`SELECT * FROM gists WHERE user_id = $1 AND
+		public = true ORDER BY created_at DESC`,
+		user.ID,
+	)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return gists
+}
+
+//
 // Gists returns all gists for a user oredered by the created at date.
 //
 func (user *User) Gists() []Gist {

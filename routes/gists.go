@@ -3,6 +3,7 @@ package routes
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/gorilla/mux"
@@ -15,7 +16,8 @@ func gists(w http.ResponseWriter, r *http.Request) {
 	}
 
 	user, _ := models.FindUser(currentUser(r).Username)
-	http.Redirect(w, r, fmt.Sprintf("/%s", user.Username), http.StatusFound)
+	gists := user.Gists()
+	render("gists/index", w, r, map[string]interface{}{"Gists": gists})
 }
 
 func usersGists(w http.ResponseWriter, r *http.Request) {
@@ -26,7 +28,7 @@ func usersGists(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	gists := user.Gists()
+	gists := user.PublicGists()
 	render("gists/index", w, r, map[string]interface{}{"Gists": gists})
 }
 
@@ -35,10 +37,13 @@ func newGist(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	public, _ := strconv.ParseBool(r.FormValue("public"))
+
 	gist := &models.Gist{
 		UserID:    currentUser(r).ID,
 		Title:     r.FormValue("title"),
 		Content:   r.FormValue("content"),
+		Public:    public,
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
 	}
@@ -72,6 +77,7 @@ func editGist(w http.ResponseWriter, r *http.Request) {
 		gist.Title = r.FormValue("title")
 		gist.Content = r.FormValue("content")
 		gist.UpdatedAt = time.Now()
+		gist.Public, _ = strconv.ParseBool(r.FormValue("public"))
 
 		if gist.Validate() {
 			gist.Save()

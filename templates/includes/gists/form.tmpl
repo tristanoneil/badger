@@ -8,5 +8,9 @@
   {{ end }}
   <div id="editor">{{.Gist.Content}}</div>
   <textarea name="content">{{.Gist.Content}}</textarea>
+  <label>
+    Public
+    <input type="checkbox" name="public" value="true" {{if .Gist.Public}}checked{{end}}>
+  </label>
   <input type="hidden" name="csrf_token" value="{{.Token}}">
 {{end}}

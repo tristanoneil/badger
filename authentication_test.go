@@ -46,7 +46,7 @@ var _ = Describe("UserSignup", func() {
 		})
 
 		Step("user is redirected to their gists", func() {
-			Expect(page).To(HaveURL(fmt.Sprintf("%s/john", server.URL)))
+			Expect(page).To(HaveURL(fmt.Sprintf("%s/", server.URL)))
 		})
 	})
 
@@ -63,7 +63,7 @@ var _ = Describe("UserSignup", func() {
 		})
 
 		Step("user is redirected to their gists", func() {
-			Expect(page).To(HaveURL(fmt.Sprintf("%s/john", server.URL)))
+			Expect(page).To(HaveURL(fmt.Sprintf("%s/", server.URL)))
 		})
 	})
 })

@@ -16,6 +16,7 @@ type Gist struct {
 	UserID    int       `db:"user_id"`
 	Title     string    `db:"title"`
 	Content   string    `db:"content"`
+	Public    bool      `db:"public"`
 	CreatedAt time.Time `db:"created_at"`
 	UpdatedAt time.Time `db:"updated_at"`
 	Errors    map[string]string
@@ -43,8 +44,8 @@ func (gist *Gist) Validate() bool {
 //
 func (gist *Gist) Create() {
 	_, err := Db.NamedExec(`
-		INSERT into gists (title, content, user_id, created_at, updated_at)
-		VALUES (:title, :content, :user_id, :created_at, :updated_at)`, gist,
+		INSERT into gists (title, content, public, user_id, created_at, updated_at)
+		VALUES (:title, :content, :public, :user_id, :created_at, :updated_at)`, gist,
 	)
 
 	if err != nil {
@@ -69,7 +70,7 @@ func (gist *Gist) Delete() {
 func (gist *Gist) Save() {
 	_, err := Db.NamedExec(`
 		UPDATE gists SET title = :title,
-		content = :content, updated_at = :updated_at WHERE id = :id`, gist,
+		content = :content, public = :public, updated_at = :updated_at WHERE id = :id`, gist,
 	)
 
 	if err != nil {
