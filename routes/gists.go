@@ -17,7 +17,7 @@ func gists(w http.ResponseWriter, r *http.Request) {
 
 	user, _ := models.FindUser(currentUser(r).Username)
 	gists := user.Gists()
-	render("gists/index", w, r, map[string]interface{}{"Gists": gists})
+	renderTemplate("gists/index", w, r, map[string]interface{}{"Gists": gists})
 }
 
 func usersGists(w http.ResponseWriter, r *http.Request) {
@@ -29,7 +29,7 @@ func usersGists(w http.ResponseWriter, r *http.Request) {
 	}
 
 	gists := user.PublicGists()
-	render("gists/index", w, r, map[string]interface{}{"Gists": gists})
+	renderTemplate("gists/index", w, r, map[string]interface{}{"Gists": gists})
 }
 
 func newGist(w http.ResponseWriter, r *http.Request) {
@@ -54,7 +54,7 @@ func newGist(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/", http.StatusFound)
 	}
 
-	render("gists/new", w, r, map[string]interface{}{"Gist": gist})
+	renderTemplate("gists/new", w, r, map[string]interface{}{"Gist": gist})
 }
 
 func showGist(w http.ResponseWriter, r *http.Request) {
@@ -63,7 +63,7 @@ func showGist(w http.ResponseWriter, r *http.Request) {
 	}
 
 	gist := models.FindGistForID(mux.Vars(r)["id"])
-	render("gists/show", w, r, map[string]interface{}{"Gist": gist})
+	renderTemplate("gists/show", w, r, map[string]interface{}{"Gist": gist})
 }
 
 func editGist(w http.ResponseWriter, r *http.Request) {
@@ -86,7 +86,7 @@ func editGist(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	render("gists/edit", w, r, map[string]interface{}{"Gist": gist})
+	renderTemplate("gists/edit", w, r, map[string]interface{}{"Gist": gist})
 }
 
 func deleteGist(w http.ResponseWriter, r *http.Request) {

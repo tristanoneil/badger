@@ -1,14 +1,12 @@
-{{define "content"}}
-  <div class="sub-header">
-    <div class="inner">
-      <h2>New Gist</h2>
-    </div>
+<div class="sub-header">
+  <div class="inner">
+    <h2>New Gist</h2>
   </div>
+</div>
 
-  <div class="main">
-    <form action="/gists" method="post">
-      {{ template "gists/form" . }}
-      <input type="submit" value="Save">
-    </form>
-  </div>
-{{end}}
+<div class="main">
+  <form action="/gists" method="post">
+    {{ template "gists/form" . }}
+    <input type="submit" value="Save">
+  </form>
+</div>

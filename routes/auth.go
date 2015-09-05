@@ -28,7 +28,7 @@ func signup(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	render("signup", w, r, map[string]interface{}{"User": user})
+	renderTemplate("signup", w, r, map[string]interface{}{"User": user})
 }
 
 func login(w http.ResponseWriter, r *http.Request) {
@@ -45,7 +45,7 @@ func login(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	render("login", w, r, data)
+	renderTemplate("login", w, r, data)
 }
 
 func logout(w http.ResponseWriter, r *http.Request) {

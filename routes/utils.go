@@ -1,18 +1,14 @@
 package routes
 
 import (
-	"fmt"
-	"html/template"
-	"log"
 	"net/http"
 	"os"
-	"regexp"
 	"strings"
 
 	"github.com/gorilla/sessions"
 	"github.com/justinas/nosurf"
 	"github.com/tristanoneil/badger/models"
-	"github.com/tristanoneil/badger/static"
+	"github.com/unrolled/render"
 )
 
 var (
@@ -23,7 +19,7 @@ func init() {
 	store = sessions.NewCookieStore([]byte(os.Getenv("SESSION_SECRET")))
 }
 
-func render(templateName string, w http.ResponseWriter,
+func renderTemplate(templateName string, w http.ResponseWriter,
 	r *http.Request, binding map[string]interface{}) {
 
 	session, _ := store.Get(r, "auth")
@@ -44,31 +40,10 @@ func render(templateName string, w http.ResponseWriter,
 		binding["CurrentUser"] = currentUser(r)
 	}
 
-	lbstr, _ := static.Asset("templates/layout.tmpl")
-	tbstr, _ := static.Asset(fmt.Sprintf("templates/%s.tmpl", templateName))
-	lstr := string(lbstr) + string(tbstr)
-
-	for _, f := range static.AssetNames() {
-		match, _ := regexp.MatchString("includes", f)
-
-		if match {
-			include, _ := static.Asset(f)
-			lstr += string(include)
-		}
-	}
-
-	var t *template.Template
-	t, err := template.New("layout").Parse(lstr)
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	err = t.ExecuteTemplate(w, "base", binding)
-
-	if err != nil {
-		log.Print("Error executing template: ", err)
-	}
+	renderer := render.New(render.Options{
+		Layout: "layout",
+	})
+	renderer.HTML(w, http.StatusOK, templateName, binding)
 }
 
 func authorize(w http.ResponseWriter, r *http.Request) bool {

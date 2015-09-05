@@ -1,45 +1,43 @@
-{{define "base"}}
-  <!DOCTYPE html>
-  <html>
-    <head>
-      <meta charset="UTF-8">
-      <title>Badger</title>
-      <link rel="stylesheet" href="/css/app.css" media="screen" charset="utf-8">
-    </head>
-    <body>
-      <div class="header">
-        <div class="inner">
-          <h1><a href="/">Badger</a></h1>
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Badger</title>
+    <link rel="stylesheet" href="/css/app.css" media="screen" charset="utf-8">
+  </head>
+  <body>
+    <div class="header">
+      <div class="inner">
+        <h1><a href="/">Badger</a></h1>
 
-          <div class="nav">
-            {{if .CurrentUser}}
-              <img src="{{.CurrentUser.GravatarURL 20}}">
-              <a href="/gists/new">New Gist</a>
-              <a href="/logout">Logout</a>
-            {{end}}
-          </div>
+        <div class="nav">
+          {{if .CurrentUser}}
+            <img src="{{.CurrentUser.GravatarURL 20}}">
+            <a href="/gists/new">New Gist</a>
+            <a href="/logout">Logout</a>
+          {{end}}
         </div>
       </div>
+    </div>
 
-      {{if .Flash}}
-        <div class="flash">
-          <div class="inner">
-            {{.Flash}}
-          </div>
-        </div>
-      {{end}}
-
-      {{if .Error}}
-      <div class="flash error">
+    {{if .Flash}}
+      <div class="flash">
         <div class="inner">
-          {{.Error}}
+          {{.Flash}}
         </div>
       </div>
-      {{end}}
+    {{end}}
 
-      {{template "content" .}}
+    {{if .Error}}
+    <div class="flash error">
+      <div class="inner">
+        {{.Error}}
+      </div>
+    </div>
+    {{end}}
 
-      <script src="/js/all.js" charset="utf-8"></script>
-    </body>
-  </html>
-{{end}}
+    {{yield}}
+
+    <script src="/js/all.js" charset="utf-8"></script>
+  </body>
+</html>

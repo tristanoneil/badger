@@ -1,22 +1,20 @@
-{{define "content"}}
-  <div class="sub-header">
-    <div class="inner">
-      <h2>Gists</h2>
-    </div>
+<div class="sub-header">
+  <div class="inner">
+    <h2>Gists</h2>
   </div>
+</div>
 
-  <div class="main">
-    {{if .Gists}}
-      {{range .Gists}}
-        <h5><a href="/gists/{{.ID}}">{{.Title}}</a></h5>
+<div class="main">
+  {{if .Gists}}
+    {{range .Gists}}
+      <h5><a href="/gists/{{.ID}}">{{.Title}}</a></h5>
 
-        <div class="gist">
-          <a href="/gists/{{.ID}}" class="link-overlay"></a>
-          {{.Markdown}}
-        </div>
-      {{end}}
-    {{else}}
-      <p>You haven't created any Gists yet.</p>
+      <div class="gist">
+        <a href="/gists/{{.ID}}" class="link-overlay"></a>
+        {{.Markdown}}
+      </div>
     {{end}}
-  </div>
-{{end}}
+  {{else}}
+    <p>You haven't created any Gists yet.</p>
+  {{end}}
+</div>

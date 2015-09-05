@@ -1,16 +1,14 @@
-{{define "content"}}
-  <div class="sub-header">
-    <div class="inner">
-      <h2>Login</h2>
-    </div>
+<div class="sub-header">
+  <div class="inner">
+    <h2>Login</h2>
   </div>
+</div>
 
-  <div class="main">
-    <form action="/login" method="post">
-      <input type="email" name="email" value="{{.Email}}" placeholder="Email">
-      <input type="password" name="password" placeholder="Password">
-      <input type="hidden" name="csrf_token" value="{{.Token}}">
-      <input type="submit" value="Login">
-    </form>
-  </div>
-{{end}}
+<div class="main">
+  <form action="/login" method="post">
+    <input type="email" name="email" value="{{.Email}}" placeholder="Email">
+    <input type="password" name="password" placeholder="Password">
+    <input type="hidden" name="csrf_token" value="{{.Token}}">
+    <input type="submit" value="Login">
+  </form>
+</div>

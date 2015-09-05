@@ -1,15 +1,13 @@
-{{define "content"}}
-  <div class="sub-header">
-    <div class="inner">
-      <h2>{{.Gist.Title}}</h2>
-      <a href="/gists/{{.Gist.ID}}/edit" class="button">Edit</a>
-      <a href="/gists/{{.Gist.ID}}/delete" class="button danger">Delete</a>
-    </div>
+<div class="sub-header">
+  <div class="inner">
+    <h2>{{.Gist.Title}}</h2>
+    <a href="/gists/{{.Gist.ID}}/edit" class="button">Edit</a>
+    <a href="/gists/{{.Gist.ID}}/delete" class="button danger">Delete</a>
   </div>
+</div>
 
-  <div class="main">
-    <div class="show gist">
-      {{.Gist.Markdown}}
-    </div>
+<div class="main">
+  <div class="show gist">
+    {{.Gist.Markdown}}
   </div>
-{{end}}
+</div>
