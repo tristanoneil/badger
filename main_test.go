@@ -3,7 +3,7 @@ package main_test
 import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	. "github.com/sclevine/agouti/core"
+	"github.com/sclevine/agouti"
 	"github.com/tristanoneil/badger/models"
 
 	"testing"
@@ -14,7 +14,7 @@ func TestBadger(t *testing.T) {
 	RunSpecs(t, "Badger Suite")
 }
 
-var agoutiDriver WebDriver
+var agoutiDriver *agouti.WebDriver
 
 var _ = BeforeSuite(func() {
 	models.ResetDB()
@@ -22,7 +22,7 @@ var _ = BeforeSuite(func() {
 
 	var err error
 
-	agoutiDriver, err = PhantomJS()
+	agoutiDriver = agouti.PhantomJS()
 
 	Expect(err).NotTo(HaveOccurred())
 	Expect(agoutiDriver.Start()).To(Succeed())

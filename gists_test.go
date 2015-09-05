@@ -6,15 +6,14 @@ import (
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	. "github.com/sclevine/agouti/core"
-	. "github.com/sclevine/agouti/dsl"
+	"github.com/sclevine/agouti"
 	. "github.com/sclevine/agouti/matchers"
 	"github.com/tristanoneil/badger/routes"
 )
 
 var _ = Describe("UserSignup", func() {
 	var (
-		page   Page
+		page   *agouti.Page
 		server *httptest.Server
 	)
 
@@ -22,7 +21,7 @@ var _ = Describe("UserSignup", func() {
 		server = httptest.NewServer(routes.Router())
 
 		var err error
-		page, err = agoutiDriver.Page()
+		page, err = agoutiDriver.NewPage()
 		Expect(err).NotTo(HaveOccurred())
 	})
 
@@ -31,23 +30,23 @@ var _ = Describe("UserSignup", func() {
 		page.Destroy()
 	})
 
-	Scenario("creating gists", func() {
-		Step("user signs up", func() {
+	It("creating gists", func() {
+		By("user signs up", func() {
 			Expect(page.Navigate(fmt.Sprintf("%s/signup", server.URL))).To(Succeed())
-			Fill(page.Find("input[name=email]"), "jack@example.com")
-			Fill(page.Find("input[name=username]"), "jack")
-			Fill(page.Find("input[name=password]"), "password")
-			Fill(page.Find("input[name=password_confirmation]"), "password")
-			Submit(page.Find("input[type=submit]"))
+			Expect(page.Find("input[name=email]").Fill("jack@example.com")).To(Succeed())
+			Expect(page.Find("input[name=username]").Fill("jack")).To(Succeed())
+			Expect(page.Find("input[name=password]").Fill("password")).To(Succeed())
+			Expect(page.Find("input[name=password_confirmation]").Fill("password")).To(Succeed())
+			Expect(page.Find("input[type=submit]").Submit()).To(Succeed())
 		})
 
-		Step("user visits new gist page", func() {
+		By("user visits new gist page", func() {
 			Expect(page.Navigate(fmt.Sprintf("%s/gists/new", server.URL))).To(Succeed())
 			Expect(page).To(HaveURL(fmt.Sprintf("%s/gists/new", server.URL)))
 		})
 
-		Step("user fills new gist form", func() {
-			Fill(page.Find("input[name=title]"), "Sample Gist")
+		By("user fills new gist form", func() {
+			Expect(page.Find("input[name=title]").Fill("Sample Gist")).To(Succeed())
 
 			Expect(page.RunScript(
 				"$(elementID).val('Some content')",
@@ -55,36 +54,36 @@ var _ = Describe("UserSignup", func() {
 				nil,
 			)).To(Succeed())
 
-			Submit(page.Find("input[type=submit]"))
+			Expect(page.Find("input[type=submit]").Submit()).To(Succeed())
 		})
 
-		Step("user is redirected to their gists", func() {
+		By("user is redirected to their gists", func() {
 			Expect(page).To(HaveURL(fmt.Sprintf("%s/", server.URL)))
 		})
 	})
 
-	Scenario("updating gists", func() {
-		Step("user vists gists page", func() {
+	It("updating gists", func() {
+		By("user vists gists page", func() {
 			Expect(page.Navigate(fmt.Sprintf("%s/", server.URL))).To(Succeed())
 			Expect(page).To(HaveURL(fmt.Sprintf("%s/", server.URL)))
 		})
 
-		Step("user clicks on a gist", func() {
-			Click(page.FindByLink("Sample Gist"))
+		By("user clicks on a gist", func() {
+			Expect(page.FindByLink("Sample Gist").Click()).To(Succeed())
 			Expect(page).To(HaveURL(fmt.Sprintf("%s/gists/1", server.URL)))
 		})
 
-		Step("user clicks edit", func() {
-			Click(page.FindByLink("Edit"))
+		By("user clicks edit", func() {
+			Expect(page.FindByLink("Edit").Click()).To(Succeed())
 			Expect(page).To(HaveURL(fmt.Sprintf("%s/gists/1/edit", server.URL)))
 		})
 
-		Step("user updates gist", func() {
-			Fill(page.Find("input[name=title]"), "Sample Gist Edited")
-			Submit(page.Find("input[type=submit]"))
+		By("user updates gist", func() {
+			Expect(page.Find("input[name=title]").Fill("Sample Gist Edited")).To(Succeed())
+			Expect(page.Find("input[type=submit]").Submit()).To(Succeed())
 		})
 
-		Step("the gist is saved", func() {
+		By("the gist is saved", func() {
 			Expect(page.HTML()).To(ContainSubstring("Sample Gist Edited"))
 		})
 	})
